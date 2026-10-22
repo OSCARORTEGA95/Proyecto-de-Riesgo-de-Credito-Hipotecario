@@ -1,0 +1,5 @@
+outs:
+- md5: 46ad324f22e740f126feadf62b4b059d
+  size: 903178636
+  hash: md5
+  path: historical_data_1999.zip
