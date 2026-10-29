@@ -1,0 +1,19 @@
+stages:
+  etl:
+    foreach: ${trimestres}
+    do:
+      cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre ${item}
+      deps:
+        - src/riesgo_credito/procesamiento/etl.py
+        - src/riesgo_credito/procesamiento/esquema.py
+        - data/crudos/historical_data_${item}.zip
+      params:
+        - etiquetas
+        - pandemia
+      outs:
+        - data/limpios/originacion/trimestre=${item}
+        - data/limpios/desempeno/trimestre=${item}
+        - data/modelado/p1/trimestre=${item}
+      metrics:
+        - data/metricas/etl/${item}.json:
+            cache: false
