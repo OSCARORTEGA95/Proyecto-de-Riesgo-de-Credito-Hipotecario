@@ -15,8 +15,12 @@ stages:
       size: 8399
     - path: src/riesgo_credito/procesamiento/etl.py
       hash: md5
-      md5: d12e29e43cec62b60f901ce288e3f58a
-      size: 11226
+      md5: da6cce4d595124e3df0cbeb5f722cec7
+      size: 17552
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: 6e69e2787e24cd29b6b6d520badead5e
+      size: 4100
     params:
       params.yaml:
         etiquetas:
@@ -25,23 +29,45 @@ stages:
         pandemia:
         - 202003
         - 202112
+        variables:
+          historial_meses: 12
     outs:
     - path: data/limpios/desempeno/trimestre=2019Q1
       hash: md5
-      md5: 06c671d253a5ab11fdcb6a36d3d4071d.dir
-      size: 123859751
+      md5: af49d55db72941a1dc5199943547ecad.dir
+      size: 126441593
       nfiles: 4
     - path: data/limpios/originacion/trimestre=2019Q1
       hash: md5
-      md5: d8358cc795c959d1823930d0d8e46943.dir
-      size: 5039444
+      md5: ea574c1549ef7f0cb32b576f4ffd1932.dir
+      size: 4966817
       nfiles: 1
     - path: data/metricas/etl/2019Q1.json
       hash: md5
-      md5: 229143b878a16348ca8f1babc9e98ed6
-      size: 245
+      md5: d761bad947f1ad421c64552cd84c9057
+      size: 501
     - path: data/modelado/p1/trimestre=2019Q1
       hash: md5
-      md5: 6342885f358abc7886136a240a412298.dir
-      size: 4080545
+      md5: ab97b54f91c6129c2b3dd780f0e3cfde.dir
+      size: 4040697
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2019Q1
+      hash: md5
+      md5: 80308909bf452ea81dd4a4f178ad7b8c.dir
+      size: 137511030
+      nfiles: 4
+    - path: data/tablero/cartera_activa/trimestre=2019Q1
+      hash: md5
+      md5: 906f54174c747ec30bc3e621d9394891.dir
+      size: 2000762
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2019Q1
+      hash: md5
+      md5: 2e17dc0141ee4673530825be42c3f881.dir
+      size: 152823
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2019Q1
+      hash: md5
+      md5: ec0a3be6d943b02d685eb2615b0a05ec.dir
+      size: 162391
       nfiles: 1

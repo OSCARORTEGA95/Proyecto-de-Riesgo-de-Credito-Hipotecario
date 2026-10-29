@@ -7,6 +7,9 @@ etiquetas:
 
 pandemia: [202003, 202112]
 
+variables:
+  historial_meses: 12
+
 spark:
   memoria_driver: 4g
   particiones: 8
