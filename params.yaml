@@ -1,0 +1,12 @@
+trimestres:
+  - 2019Q1
+
+etiquetas:
+  ventana_p1: 12
+  ventana_p2: 3
+
+pandemia: [202003, 202112]
+
+spark:
+  memoria_driver: 4g
+  particiones: 8

@@ -1,3 +1,8 @@
-data/
+data/*
+!data/README.md
+!data/metricas/
+!data/crudos/
+data/crudos/*
+!data/crudos/*.dvc
 models/
 .env/
