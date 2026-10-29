@@ -10,10 +10,21 @@ Con las credenciales del Learner Lab configuradas, desde la raíz del repositori
 dvc pull --glob "data/modelado/p1/*"            # tabla de la pregunta 1, todos los trimestres
 dvc pull "data/modelado/p1/trimestre=2019Q1"    # un solo trimestre
 dvc pull --glob "data/limpios/originacion/*"
+dvc pull --glob "data/modelado/p2/*"            # tabla de la pregunta 2, pesada
+dvc pull --glob "data/tablero/*/*"              # todas las tablas del tablero, livianas
 dvc pull --glob "data/limpios/desempeno/*"      # la más pesada
 ```
 
 Las tablas se leen con pandas: `pd.read_parquet("data/modelado/p1")` lee todos los trimestres descargados y agrega la columna `trimestre`.
+
+P2 tiene millones de filas por trimestre y no cabe completa en la memoria de una VM de 8 GB. Para entrenar conviene leer solo una muestra, por ejemplo todos los positivos y los créditos con `grupo_muestra < 10`:
+
+```python
+import pyarrow.dataset as ds
+d = ds.dataset("data/modelado/p2", partitioning="hive")
+filtro = (ds.field("dlq_num") == 0) & ds.field("y_p2").is_valid() & ((ds.field("y_p2") == 1) | (ds.field("grupo_muestra") < 10))
+p2 = d.to_table(filter=filtro).to_pandas()
+```
 
 ## Cómo regenerar
 
@@ -26,6 +37,10 @@ data/crudos/historical_data_AAAATn.zip     zip trimestral de Freddie Mac (DVC)
 data/limpios/originacion/trimestre=AAAATn  un crédito por fila
 data/limpios/desempeno/trimestre=AAAATn    un crédito por mes
 data/modelado/p1/trimestre=AAAATn          pregunta 1: variables de la solicitud y etiqueta
+data/modelado/p2/trimestre=AAAATn          pregunta 2: variables mensuales y etiquetas
+data/tablero/originacion/trimestre=AAAATn  conteos y sumas para Panorama y Evaluación
+data/tablero/serie_mensual/trimestre=AAAATn  mora y asistencia por mes y estado
+data/tablero/cartera_activa/trimestre=AAAATn  créditos al día en la fecha de corte, para Seguimiento
 data/metricas/etl/AAAATn.json              conteos de cada ejecución (en Git)
 ```
 
@@ -105,3 +120,44 @@ Una fila por crédito, sin los créditos con código 96. Solo variables disponib
 | first_payment_date | Mes del primer pago, para la partición temporal |
 | credit_score, dti, oltv, ocltv, orig_rate, orig_upb, orig_term, mi_pct, purpose, occupancy, channel, first_time_homebuyer, num_borrowers, num_units, prop_type, state | Variables de la solicitud (ver originación) |
 | y_p1 | 1 si el primer incumplimiento ocurre en los primeros 12 meses, 0 si no; nulo si el crédito sigue activo sin incumplir y aún no cumple 12 meses |
+
+## data/modelado/p2
+
+Una fila por crédito y mes en que el crédito está activo y al día o con 30 días de atraso, sin los créditos con código 96. Las variables usan solo información hasta ese mes. Las variables de la solicitud no se repiten: se unen desde P1 por `loan_id`.
+
+La etiqueta de la carta es `y_p2` en las filas con `dlq_num = 0`. Las variantes son `y_p2` con `dlq_num` 0 o 1 (desde al día o 30 días) y `y_p2_60` con `dlq_num = 0` (llegada a 60 días o más).
+
+| Columna | Descripción |
+|---|---|
+| loan_id, period | Crédito y mes, AAAAMM |
+| edad | Meses desde el primer pago |
+| dlq_num | Atraso en el mes: 0 al día, 1 treinta días |
+| current_upb | Saldo (USD) |
+| pct_saldo | Saldo / monto original |
+| current_rate | Tasa actual (%) |
+| dif_tasa | Tasa actual − tasa original |
+| eltv | Préstamo-valor estimado actual (%) |
+| atrasos_12m | Meses con atraso en los 12 meses anteriores |
+| max_atraso_12m | Mayor atraso en los 12 meses anteriores |
+| meses_desde_atraso | Meses desde el último atraso; nulo si nunca se ha atrasado |
+| con_atraso_previo | Se ha atrasado alguna vez antes del mes |
+| plan_asistencia | Plan en el mes: F indulgencia, R plan de repago, T periodo de prueba; nulo sin plan |
+| indulgencia_12m | Meses en indulgencia en los 12 meses anteriores |
+| diferimiento | Tiene diferimiento de pagos |
+| saldo_sin_interes | Tiene saldo que no genera intereses |
+| mora_desastre | Atraso atribuido a un desastre |
+| modificado | El crédito ya fue modificado |
+| en_pandemia | Mes entre 202003 y 202112 |
+| y_p2 | 1 si llega a 90 días o más (o RA, o salida por 2, 3 o 9) en los 3 meses siguientes; nulo si esos meses no se alcanzan a observar |
+| y_p2_60 | Igual, con 60 días o más |
+| grupo_muestra | Número de 0 a 99 fijo por crédito, para tomar muestras reproducibles |
+
+## data/tablero
+
+Guardan conteos y sumas, no tasas ni promedios, para poder sumar cualquier combinación de filtros y dividir después. Por ejemplo, el puntaje promedio es `suma_puntaje / n_puntaje` y el incumplimiento a 12 meses por cohorte es `p1_positivos / p1_etiquetables` agrupando por `trimestre`.
+
+**originacion**: un grupo por `state`, `purpose`, `rango_puntaje` (<620, 620-679, 680-719, 720-759, 760-799, >=800, Sin dato) y `rango_ltv` (<=60, 61-70, 71-80, 81-90, 91-95, >95). Columnas: `creditos`, `monto_total`, `suma_puntaje` y `n_puntaje`, `suma_tasa` y `n_tasa`, `suma_ltv` y `n_ltv`, `suma_dti` y `n_dti`, `p1_etiquetables`, `p1_positivos`. Incluye los créditos con código 96, porque cuentan como originaciones.
+
+**serie_mensual**: un grupo por `period` y `state`, solo créditos activos. Columnas: `activos`, `saldo`, `al_dia`, `mora_30`, `mora_60`, `mora_90` (incluye RA), `saldo_mora_90`, `indulgencia`, `plan_repago`, `periodo_prueba`, `mora_desastre`, `diferimiento`.
+
+**cartera_activa**: los créditos al día en la fecha de corte del trimestre, con las columnas de P2 (sin etiquetas), `first_payment_date` y las variables de la solicitud. Es lo que la vista Seguimiento envía a la API y lo que muestra en el detalle del crédito. Para otra fecha de corte se filtra P2 por `period`.
