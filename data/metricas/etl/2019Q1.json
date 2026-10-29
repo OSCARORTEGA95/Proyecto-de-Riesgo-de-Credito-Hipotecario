@@ -1,0 +1,20 @@
+{
+  "trimestre": "2019Q1",
+  "creditos": 279861,
+  "registros_desempeno": 9821276,
+  "periodo_inicial": 201901,
+  "fecha_corte": 202603,
+  "excluidos_codigo_96": 801,
+  "p1_creditos": 279060,
+  "p1_etiquetables": 279060,
+  "p1_positivos": 680,
+  "p2_filas": 9399814,
+  "p2_etiquetables": 9129854,
+  "p2_positivos": 14938,
+  "p2_30_etiquetables": 9236499,
+  "p2_30_positivos": 35421,
+  "p2_60_etiquetables": 9129930,
+  "p2_60_positivos": 42799,
+  "activos_al_corte": 55339,
+  "cartera_activa": 53605
+}
