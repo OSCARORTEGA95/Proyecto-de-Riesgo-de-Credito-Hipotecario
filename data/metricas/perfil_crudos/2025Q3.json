@@ -1,0 +1,574 @@
+{
+ "trimestre": "2025Q3",
+ "bytes_zip": 28780955,
+ "originacion": {
+  "archivo": "orig_2025Q3.txt",
+  "formato": "nuevo",
+  "columnas": 31,
+  "filas": 289578,
+  "filas_invalidas": 0,
+  "bytes_descomprimido": 36592654,
+  "perfil": {
+   "credit_score": {
+    "vacios": 0,
+    "no_disponible": {
+     "9999": 93
+    },
+    "no_numericos": 0,
+    "minimo": 300.0,
+    "maximo": 9999.0,
+    "ceros": 0
+   },
+   "first_payment_date": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 202508.0,
+    "maximo": 202604.0,
+    "ceros": 0
+   },
+   "first_time_homebuyer": {
+    "vacios": 0,
+    "no_disponible": {
+     "9": 0
+    },
+    "valores": {
+     "N": 187891,
+     "Y": 101687
+    }
+   },
+   "maturity_date": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 203210.0,
+    "maximo": 205603.0,
+    "ceros": 0
+   },
+   "msa": {
+    "vacios": 34989
+   },
+   "mi_pct": {
+    "vacios": 0,
+    "no_disponible": {
+     "999": 0
+    },
+    "no_numericos": 0,
+    "minimo": 0.0,
+    "maximo": 54.0,
+    "ceros": 188971
+   },
+   "num_units": {
+    "vacios": 0,
+    "no_disponible": {
+     "99": 0
+    },
+    "valores": {
+     "1": 284968,
+     "2": 3504,
+     "3": 668,
+     "4": 438
+    }
+   },
+   "occupancy": {
+    "vacios": 0,
+    "no_disponible": {
+     "9": 0
+    },
+    "valores": {
+     "P": 269454,
+     "I": 14846,
+     "S": 5278
+    }
+   },
+   "ocltv": {
+    "vacios": 0,
+    "no_disponible": {
+     "999": 0
+    },
+    "no_numericos": 0,
+    "minimo": 2.0,
+    "maximo": 153.0,
+    "ceros": 0
+   },
+   "dti": {
+    "vacios": 0,
+    "no_disponible": {
+     "999": 3
+    },
+    "no_numericos": 0,
+    "minimo": 1.0,
+    "maximo": 999.0,
+    "ceros": 0
+   },
+   "orig_upb": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 19000.0,
+    "maximo": 1850000.0,
+    "ceros": 0
+   },
+   "oltv": {
+    "vacios": 0,
+    "no_disponible": {
+     "999": 0
+    },
+    "no_numericos": 0,
+    "minimo": 2.0,
+    "maximo": 153.0,
+    "ceros": 0
+   },
+   "orig_rate": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 2.625,
+    "maximo": 9.75,
+    "ceros": 0
+   },
+   "channel": {
+    "vacios": 0,
+    "no_disponible": {
+     "9": 0
+    },
+    "valores": {
+     "R": 150964,
+     "C": 92796,
+     "B": 45818
+    }
+   },
+   "ppm_flag": {
+    "vacios": 0,
+    "valores": {
+     "N": 289578
+    }
+   },
+   "amort_type": {
+    "vacios": 0,
+    "valores": {
+     "FRM": 289578
+    }
+   },
+   "state": {
+    "vacios": 0,
+    "valores": {
+     "TX": 23912,
+     "FL": 19156,
+     "CA": 19083,
+     "IL": 14276,
+     "OH": 13366,
+     "MI": 12218,
+     "PA": 11230,
+     "NY": 10523,
+     "NC": 10468,
+     "GA": 9172,
+     "IN": 8381,
+     "NJ": 8299,
+     "VA": 7879,
+     "AZ": 7655,
+     "WA": 7492,
+     "MO": 7242,
+     "MN": 7181,
+     "TN": 6866,
+     "CO": 6845,
+     "WI": 6038,
+     "SC": 5961,
+     "MA": 5404,
+     "MD": 5139,
+     "UT": 4391,
+     "KY": 4346,
+     "OR": 4337,
+     "AL": 3893,
+     "CT": 3519,
+     "OK": 3032,
+     "KS": 2965,
+     "NV": 2759,
+     "IA": 2665,
+     "AR": 2635,
+     "LA": 2584,
+     "ID": 2447,
+     "NE": 1881,
+     "NH": 1871,
+     "NM": 1548,
+     "DE": 1421,
+     "ME": 1375,
+     "MS": 1298,
+     "MT": 1112,
+     "WV": 1051,
+     "RI": 928,
+     "VT": 683,
+     "SD": 556,
+     "WY": 538,
+     "ND": 513,
+     "HI": 500,
+     "AK": 485,
+     "DC": 379,
+     "PR": 43,
+     "VI": 21,
+     "GU": 16
+    }
+   },
+   "prop_type": {
+    "vacios": 0,
+    "no_disponible": {
+     "99": 0
+    },
+    "valores": {
+     "SF": 176082,
+     "PU": 86617,
+     "CO": 22890,
+     "MH": 3470,
+     "CP": 519
+    }
+   },
+   "zip3": {
+    "vacios": 0,
+    "no_disponible": {
+     "000": 0
+    }
+   },
+   "loan_id": {
+    "vacios": 0
+   },
+   "purpose": {
+    "vacios": 0,
+    "no_disponible": {
+     "9": 0
+    },
+    "valores": {
+     "P": 217337,
+     "C": 39781,
+     "N": 32460
+    }
+   },
+   "orig_term": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 85.0,
+    "maximo": 361.0,
+    "ceros": 0
+   },
+   "num_borrowers": {
+    "vacios": 0,
+    "no_disponible": {
+     "99": 0
+    },
+    "valores": {
+     "1": 149893,
+     "2": 134798,
+     "3": 4189,
+     "4": 685,
+     "5": 13
+    }
+   },
+   "seller": {
+    "vacios": 0
+   },
+   "super_conforming": {
+    "vacios": 0,
+    "valores": {
+     "N": 287076,
+     "Y": 2502
+    }
+   },
+   "pre_harp_id": {
+    "vacios": 289578
+   },
+   "special_eligibility": {
+    "vacios": 250022,
+    "valores": {
+     "H": 35086,
+     "F": 4355,
+     "R": 115
+    }
+   },
+   "harp": {
+    "vacios": 0,
+    "valores": {
+     "N": 289578
+    }
+   },
+   "valuation_method": {
+    "vacios": 0,
+    "no_disponible": {
+     "7": 0,
+     "9": 0
+    },
+    "valores": {
+     "2": 218427,
+     "1": 65244,
+     "4": 5907
+    }
+   },
+   "io_flag": {
+    "vacios": 0,
+    "valores": {
+     "N": 289578
+    }
+   },
+   "vantage_score": {
+    "vacios": 0,
+    "no_disponible": {
+     "9999": 289578
+    },
+    "no_numericos": 0,
+    "minimo": 9999.0,
+    "maximo": 9999.0,
+    "ceros": 0
+   }
+  }
+ },
+ "desempeno": {
+  "archivo": "perf_2025Q3.txt",
+  "formato": "nuevo",
+  "columnas": 35,
+  "filas": 1931401,
+  "filas_invalidas": 0,
+  "bytes_descomprimido": 224484286,
+  "perfil": {
+   "loan_id": {
+    "vacios": 0
+   },
+   "period": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 202507.0,
+    "maximo": 202603.0,
+    "ceros": 0
+   },
+   "current_upb": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 0.0,
+    "maximo": 1850000.0,
+    "ceros": 14073
+   },
+   "dlq_status": {
+    "vacios": 0,
+    "valores": {
+     "00": 1839829,
+     "XX": 83231,
+     "01": 6779,
+     "02": 946,
+     "03": 321,
+     "04": 157,
+     "05": 102,
+     "06": 31,
+     "07": 5
+    }
+   },
+   "loan_age": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 0.0,
+    "maximo": 8.0,
+    "ceros": 248830
+   },
+   "remaining_months": {
+    "vacios": 287,
+    "no_numericos": 0,
+    "minimo": 79.0,
+    "maximo": 361.0,
+    "ceros": 0
+   },
+   "defect_settlement_date": {
+    "vacios": 1931146,
+    "no_numericos": 0,
+    "minimo": 202510.0,
+    "maximo": 202604.0,
+    "ceros": 0
+   },
+   "mod_flag": {
+    "vacios": 1931401,
+    "valores": {}
+   },
+   "zero_balance_code": {
+    "vacios": 1917328,
+    "valores": {
+     "01": 13773,
+     "96": 300
+    }
+   },
+   "zero_balance_date": {
+    "vacios": 1917329,
+    "no_numericos": 0,
+    "minimo": 202507.0,
+    "maximo": 202604.0,
+    "ceros": 0
+   },
+   "current_rate": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 2.625,
+    "maximo": 9.75,
+    "ceros": 0
+   },
+   "non_interest_upb": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 0.0,
+    "maximo": 18312.3,
+    "ceros": 1931394
+   },
+   "ddlpi": {
+    "vacios": 1917328,
+    "no_numericos": 0,
+    "minimo": 202508.0,
+    "maximo": 205509.0,
+    "ceros": 0
+   },
+   "mi_recoveries": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "net_sales_proceeds": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "non_mi_recoveries": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "total_expenses": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "legal_costs": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "maintenance_costs": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "taxes_insurance": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "misc_expenses": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "actual_loss": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "cum_mod_cost": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 0.0,
+    "maximo": 214.84,
+    "ceros": 1931394
+   },
+   "step_mod_flag": {
+    "vacios": 1931401,
+    "valores": {}
+   },
+   "payment_deferral": {
+    "vacios": 1931394,
+    "valores": {
+     "C": 4,
+     "P": 3
+    }
+   },
+   "eltv": {
+    "vacios": 0,
+    "no_disponible": {
+     "999": 177144
+    },
+    "no_numericos": 0,
+    "minimo": 1.0,
+    "maximo": 999.0,
+    "ceros": 0
+   },
+   "zero_balance_upb": {
+    "vacios": 1917328,
+    "no_numericos": 0,
+    "minimo": 0.01,
+    "maximo": 1626108.8,
+    "ceros": 0
+   },
+   "dlq_accrued_interest": {
+    "vacios": 1931401,
+    "no_numericos": 0,
+    "minimo": null,
+    "maximo": null,
+    "ceros": 0
+   },
+   "dlq_disaster": {
+    "vacios": 1931388,
+    "valores": {
+     "Y": 13
+    }
+   },
+   "assistance_plan": {
+    "vacios": 1930766,
+    "valores": {
+     "F": 607,
+     "R": 28
+    }
+   },
+   "current_mod_cost": {
+    "vacios": 1931394,
+    "no_numericos": 0,
+    "minimo": 20.93,
+    "maximo": 107.42,
+    "ceros": 0
+   },
+   "interest_bearing_upb": {
+    "vacios": 0,
+    "no_numericos": 0,
+    "minimo": 0.0,
+    "maximo": 1850000.0,
+    "ceros": 14073
+   },
+   "mi_cancel": {
+    "vacios": 0,
+    "no_disponible": {
+     "7": 1255445,
+     "9": 0
+    },
+    "valores": {
+     "7": 1255445,
+     "N": 667563,
+     "Y": 8393
+    }
+   },
+   "servicer": {
+    "vacios": 0
+   },
+   "cramdown_costs": {
+    "vacios": 253872,
+    "no_numericos": 0,
+    "minimo": 0.0,
+    "maximo": 0.0,
+    "ceros": 1677529
+   }
+  }
+ },
+ "segundos": 5
+}

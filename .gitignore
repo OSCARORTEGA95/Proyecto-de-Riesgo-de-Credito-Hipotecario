@@ -6,3 +6,4 @@ data/crudos/*
 !data/crudos/*.dvc
 models/
 .env/
+__pycache__/

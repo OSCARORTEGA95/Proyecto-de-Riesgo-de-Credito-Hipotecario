@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import shutil
 import tempfile
 import time
@@ -32,18 +33,27 @@ from pyspark.sql.types import StringType, StructField, StructType
 
 from riesgo_credito.procesamiento import esquema
 
-# Columnas de originación sin información (vacías o constantes) o casi siempre no disponibles
-DESCARTAR_ORIGINACION = ["ppm_flag", "amort_type", "io_flag", "vantage_score", "valuation_method"]
+# Columnas de originación sin información en los 29 trimestres de 2019 a 2026 (perfil_crudos):
+# constantes o no disponibles en todos los créditos
+DESCARTAR_ORIGINACION = ["ppm_flag", "amort_type", "io_flag", "vantage_score"]
 
-# Columnas de desempeño que no se usan: posteriores al cierre, constantes o reemplazadas por la edad calculada
+# Columnas de desempeño que no se usan: posteriores al cierre (ddlpi solo existe al cierre), casi
+# constantes en los 29 trimestres (step_mod_flag, cramdown_costs) o reemplazadas por la edad calculada
 DESCARTAR_DESEMPENO = esquema.POSTERIORES_AL_CIERRE + ["ddlpi", "step_mod_flag", "cramdown_costs", "loan_age"]
 
 # Variables disponibles al momento de la solicitud, usadas por el modelo de aprobación y la API
 VARIABLES_P1 = [
     "credit_score", "dti", "oltv", "ocltv", "orig_rate", "orig_upb", "orig_term", "mi_pct",
     "purpose", "occupancy", "channel", "first_time_homebuyer", "num_borrowers", "num_units",
-    "prop_type", "state",
+    "prop_type", "state", "valuation_method",
 ]
+
+# Tasas de interés actuales por encima de este valor se cuentan en las métricas para revisarlas
+TASA_A_REVISAR = 20.0
+
+# Las tablas mensuales se escriben en un archivo por cada 300 MB del desempeño crudo (4 para 2019Q1,
+# 28 para 2020Q4), para que cada tarea de Spark ordene una parte pequeña de los datos
+BYTES_POR_ARCHIVO = 300_000_000
 
 COLUMNAS_ORIGINACION = [c for c in esquema.ORIGINACION_NUEVO if c not in DESCARTAR_ORIGINACION]
 COLUMNAS_DESEMPENO = [c for c in esquema.DESEMPENO_NUEVO if c not in DESCARTAR_DESEMPENO]
@@ -176,7 +186,8 @@ def etiqueta_p1(resumen: DataFrame, ventana: int) -> DataFrame:
 
 
 def construir_p2(perf: DataFrame, orig: DataFrame, ventana: int, historial: int) -> DataFrame:
-    """Una fila por crédito-mes activo, al día o con 30 días de atraso, sin código 96.
+    """Una fila por crédito-mes activo, al día o con 30 días de atraso, sin código 96,
+    desde el mes del primer pago (antes no hay ninguna cuota que pagar).
 
     Las variables usan solo información hasta el mes t. y_p2 = 1 si hay un
     incumplimiento en los `ventana` meses siguientes; y_p2_60 hace lo mismo
@@ -208,7 +219,7 @@ def construir_p2(perf: DataFrame, orig: DataFrame, ventana: int, historial: int)
         .withColumn("meses_desde_atraso", F.col("mes") - F.max(F.when(atrasado, F.col("mes"))).over(pasado))
     )
     return (
-        base.where(F.col("dlq_num").isin(0, 1) & F.col("zero_balance_code").isNull())
+        base.where(F.col("dlq_num").isin(0, 1) & F.col("zero_balance_code").isNull() & (F.col("edad") >= 1))
         .select(
             "loan_id", "period", "edad", "dlq_num",
             "current_upb", (F.col("current_upb") / F.col("orig_upb")).alias("pct_saldo"),
@@ -218,6 +229,7 @@ def construir_p2(perf: DataFrame, orig: DataFrame, ventana: int, historial: int)
             F.col("meses_desde_atraso").isNotNull().alias("con_atraso_previo"),
             F.col("assistance_plan").alias("plan_asistencia"), "indulgencia_12m",
             F.col("payment_deferral").isNotNull().alias("diferimiento"),
+            F.coalesce(F.col("payment_deferral") == "C", F.lit(False)).alias("diferimiento_mes"),
             F.coalesce(F.col("non_interest_upb") > 0, F.lit(False)).alias("saldo_sin_interes"),
             F.coalesce(F.col("dlq_disaster") == "Y", F.lit(False)).alias("mora_desastre"),
             "modificado", "en_pandemia",
@@ -228,6 +240,19 @@ def construir_p2(perf: DataFrame, orig: DataFrame, ventana: int, historial: int)
     )
 
 
+def revisar_valores(perf: DataFrame, orig: DataFrame) -> dict:
+    """Conteos de valores que el ETL conserva pero que conviene vigilar."""
+    tasas = perf.join(orig.select("loan_id", "orig_rate"), "loan_id")
+    fila = tasas.agg(
+        F.sum((F.col("dlq_status") == "XX").cast("int")).alias("registros_xx"),
+        F.sum(((F.col("dlq_status") == "XX") & (F.col("edad") >= 1)).cast("int")).alias("registros_xx_despues_primer_pago"),
+        F.sum((F.col("current_rate") > TASA_A_REVISAR).cast("int")).alias("tasas_mayores_20"),
+        F.sum((F.col("current_rate") > 2 * F.col("orig_rate")).cast("int")).alias("tasas_mayores_doble_original"),
+        F.max("current_rate").alias("tasa_actual_maxima"),
+    ).first().asDict()
+    return {k: (v if v is not None else 0) for k, v in fila.items()}
+
+
 # --------------------------------------------------------------------------
 # Escritura y ejecución
 # --------------------------------------------------------------------------
@@ -235,14 +260,19 @@ def construir_p2(perf: DataFrame, orig: DataFrame, ventana: int, historial: int)
 def escribir(df: DataFrame, ruta: Path, orden: list[str], archivos: int = 1) -> None:
     """Escribe Parquet de forma reproducible: los mismos datos producen los mismos archivos.
 
-    Spark ordena las filas y escribe en una carpeta temporal; luego cada archivo
-    se reescribe con pyarrow con un nombre fijo. Spark deja nombres aleatorios y
-    un pie de archivo que varía entre ejecuciones, lo que haría que DVC
-    volviera a subir tablas que no cambiaron.
+    Las filas se reparten en `archivos` grupos según la primera columna de
+    `orden` y se ordenan dentro de cada grupo; Spark escribe en una carpeta
+    temporal y luego cada archivo se reescribe con pyarrow con un nombre fijo.
+    Spark deja nombres aleatorios y un pie de archivo que varía entre
+    ejecuciones, lo que haría que DVC volviera a subir tablas que no cambiaron.
+
+    Se usa repartition y no coalesce: coalesce reduce también el número de
+    tareas de los cálculos anteriores (ventanas, uniones) y con trimestres
+    grandes deja a cada tarea con más datos de los que caben en memoria.
     """
     temporal = ruta.parent / f".tmp_{ruta.name.replace('=', '_')}"
     shutil.rmtree(temporal, ignore_errors=True)
-    df.coalesce(archivos).sortWithinPartitions(*orden).write.mode("overwrite").parquet(str(temporal))
+    df.repartition(archivos, orden[0]).sortWithinPartitions(*orden).write.mode("overwrite").parquet(str(temporal))
     shutil.rmtree(ruta, ignore_errors=True)
     ruta.mkdir(parents=True)
     for i, parte in enumerate(sorted(temporal.glob("part-*.parquet"))):
@@ -270,6 +300,8 @@ def ejecutar(trimestre: str, params: dict, raiz: Path = Path(".")) -> dict:
     from riesgo_credito.procesamiento import tablero
 
     spark = crear_sesion(p_spark["memoria_driver"], p_spark["particiones"])
+    memoria_java = spark.sparkContext._jvm.java.lang.Runtime.getRuntime().maxMemory() / 1e9
+    print(f"{trimestre}: memoria máxima de Java {memoria_java:.1f} GB", flush=True)
     temporal = Path(tempfile.mkdtemp(prefix=f"etl_{trimestre}_"))
     try:
         ruta_orig, ruta_perf = extraer_zip(raiz / f"data/crudos/historical_data_{trimestre}.zip", temporal)
@@ -277,7 +309,8 @@ def ejecutar(trimestre: str, params: dict, raiz: Path = Path(".")) -> dict:
         orig = leer_crudo(spark, ruta_orig, "originacion", COLUMNAS_ORIGINACION)
         perf = leer_crudo(spark, ruta_perf, "desempeno", COLUMNAS_DESEMPENO)
         perf = limpiar_desempeno(perf, orig, pandemia)
-        escribir(perf, salidas["desempeno"], ["loan_id", "mes"], archivos=4)
+        archivos = max(1, math.ceil(ruta_perf.stat().st_size / BYTES_POR_ARCHIVO))
+        escribir(perf, salidas["desempeno"], ["loan_id", "mes"], archivos=archivos)
 
         # El resto se calcula desde el Parquet ya escrito, que es más rápido que releer el texto
         perf = spark.read.parquet(str(salidas["desempeno"]))
@@ -295,7 +328,7 @@ def ejecutar(trimestre: str, params: dict, raiz: Path = Path(".")) -> dict:
         p1 = spark.read.parquet(str(salidas["p1"]))
 
         p2 = construir_p2(perf, orig, p_etq["ventana_p2"], params["variables"]["historial_meses"])
-        escribir(p2, salidas["p2"], ["loan_id", "period"], archivos=4)
+        escribir(p2, salidas["p2"], ["loan_id", "period"], archivos=archivos)
         p2 = spark.read.parquet(str(salidas["p2"]))
 
         fecha_corte = perf.agg(F.max("period")).first()[0]
@@ -325,10 +358,12 @@ def ejecutar(trimestre: str, params: dict, raiz: Path = Path(".")) -> dict:
             "p1_creditos": p1.count(),
             "p1_etiquetables": p1.where(F.col("y_p1").isNotNull()).count(),
             "p1_positivos": p1.where(F.col("y_p1") == 1).count(),
-            **{k: int(v) for k, v in conteos_p2.items()},
+            # Una suma sin filas etiquetadas devuelve nulo (pasa en el trimestre más reciente): se reporta como 0
+            **{k: int(v or 0) for k, v in conteos_p2.items()},
             "activos_al_corte": perf.where((F.col("period") == fecha_corte)
                                            & F.col("zero_balance_code").isNull()).count(),
             "cartera_activa": spark.read.parquet(str(salidas["tablero_cartera_activa"])).count(),
+            **revisar_valores(perf, orig),
         }
         destino = raiz / "data/metricas/etl" / f"{trimestre}.json"
         destino.parent.mkdir(parents=True, exist_ok=True)
