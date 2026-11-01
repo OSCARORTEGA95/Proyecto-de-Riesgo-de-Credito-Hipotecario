@@ -5,6 +5,9 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash import Dash, Input, Output, dcc, html
 
+# Importar el módulo de Evaluación
+from evaluacion import crear_evaluacion, registrar_callbacks_evaluacion
+
 
 # ==========================================
 # 1. DATOS TRANSFORMADOS POR JUAN
@@ -175,6 +178,7 @@ def selector(titulo, componente):
 
 def tarjeta_kpi(titulo, identificador, detalle):
     return html.Div([
+
         html.P(titulo, style={
             "color": "#64748b",
             "fontSize": "13px",
@@ -204,6 +208,7 @@ def tarjeta_kpi(titulo, identificador, detalle):
 def tarjeta_grafica(titulo, subtitulo, identificador, nota=None):
 
     contenido = [
+
         html.H4(titulo, style={
             "margin": "0 0 6px",
             "color": "#17324d"
@@ -305,7 +310,7 @@ def grafica_barras(tabla, columna, orden):
 
 
 # ==========================================
-# 4. CREAR APLICACIÓN DASH
+# 4. APLICACIÓN PRINCIPAL
 # ==========================================
 
 app = Dash(__name__)
@@ -313,7 +318,7 @@ app.title = "Mortgage Risk Analytics"
 
 
 # ==========================================
-# 5. FILTROS DEL TABLERO
+# 5. FILTROS DE PANORAMA
 # ==========================================
 
 filtros = html.Div([
@@ -392,6 +397,7 @@ panorama = html.Div([
     # Título y filtros adicionales
 
     html.Div([
+
         html.Div([
             html.H2("Panorama de cartera"),
             html.P(id="subtitulo")
@@ -555,7 +561,7 @@ panorama = html.Div([
 
 
 # ==========================================
-# 7. DISEÑO GENERAL DEL TABLERO
+# 7. PESTAÑAS DEL TABLERO
 # ==========================================
 
 app.layout = html.Div([
@@ -573,29 +579,29 @@ app.layout = html.Div([
 
     dcc.Tabs([
 
+        # Panorama: mantiene todos los KPIs y gráficas
         dcc.Tab(
             label="Panorama",
-            children=[filtros, panorama]
+            children=[
+                filtros,
+                panorama
+            ]
         ),
 
+        # Evaluación: utiliza el nuevo archivo evaluacion.py
         dcc.Tab(
             label="Evaluación",
-            children=html.Div([
-                html.H2("Evaluación de solicitudes"),
-                html.P(
-                    "Formulario e integración predictiva pendientes. "
-                    "No se muestran predicciones sin modelo."
-                )
-            ], style={"padding": "24px"})
+            children=crear_evaluacion(estados, nombres_estados)
         ),
 
+        # Seguimiento: lo desarrollaremos después
         dcc.Tab(
             label="Seguimiento",
             children=html.Div([
                 html.H2("Monitoreo y alertas"),
                 html.P(
-                    "Indicadores de seguimiento y alertas "
-                    "predictivas pendientes."
+                    "Indicadores de seguimiento y "
+                    "alertas predictivas pendientes."
                 )
             ], style={"padding": "24px"})
         )
@@ -611,7 +617,7 @@ app.layout = html.Div([
 
 
 # ==========================================
-# 8. ACTUALIZAR KPIs Y GRÁFICAS
+# 8. ACTUALIZAR KPIs Y GRÁFICAS DE PANORAMA
 # ==========================================
 
 @app.callback(
@@ -662,7 +668,7 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
             subtitulo, mensaje, *vacias
         )
 
-    # Indicadores calculados con sumas y denominadores
+    # Cinco KPIs
 
     indicadores = (
         numero(int(tabla["creditos"].sum())),
@@ -726,7 +732,7 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
         tabla, "rango_ltv", rangos_ltv
     )
 
-    # Gráfica 4: diez estados con más originaciones
+    # Gráfica 4: créditos por estado
 
     ranking = (
         tabla.groupby("state")["creditos"]
@@ -762,9 +768,7 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
         font=dict(size=11)
     )
 
-    # Gráfica 5: incumplimiento por cohorte
-    # Se excluyen cohortes posteriores a 2025Q1
-    # para evitar mostrar los períodos más recientes.
+    # Gráfica 5: evolución histórica por cohorte
 
     cohortes = (
         tabla[tabla["trimestre"] <= "2025Q1"]
@@ -856,7 +860,6 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
 # ==========================================
 
 @app.callback(
-
     Output("filtro-estado", "value"),
     Output("filtro-desde", "value"),
     Output("filtro-hasta", "value"),
@@ -878,7 +881,14 @@ def restablecer_filtros(n_clicks):
 
 
 # ==========================================
-# 10. EJECUTAR EL TABLERO
+# 10. ACTIVAR INTERACCIONES DE EVALUACIÓN
+# ==========================================
+
+registrar_callbacks_evaluacion(app, datos)
+
+
+# ==========================================
+# 11. EJECUTAR EL TABLERO
 # ==========================================
 
 if __name__ == "__main__":
