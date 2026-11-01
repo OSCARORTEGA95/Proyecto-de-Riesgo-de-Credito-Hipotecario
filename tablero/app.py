@@ -5,8 +5,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash import Dash, Input, Output, dcc, html
 
-# Importar el módulo de Evaluación
 from evaluacion import crear_evaluacion, registrar_callbacks_evaluacion
+from seguimiento import crear_seguimiento, registrar_callbacks_seguimiento
 
 
 # ==========================================
@@ -124,8 +124,8 @@ def monto_usd(valor):
     return f"USD {numero(valor)}"
 
 
-def promedio(tabla, suma, cantidad, decimales=2, porcentaje=False):
-    n = tabla[cantidad].sum()
+def promedio(tabla, suma, conteo, decimales=2, porcentaje=False):
+    n = tabla[conteo].sum()
 
     if n == 0:
         return "—"
@@ -161,7 +161,7 @@ def filtrar_datos(estado, desde, hasta, proposito, fico):
 
 
 # ==========================================
-# 3. COMPONENTES VISUALES
+# 3. COMPONENTES VISUALES DE PANORAMA
 # ==========================================
 
 def selector(titulo, componente):
@@ -182,7 +182,7 @@ def tarjeta_kpi(titulo, identificador, detalle):
         html.P(titulo, style={
             "color": "#64748b",
             "fontSize": "13px",
-            "margin": "0"
+            "margin": 0
         }),
 
         html.H2(id=identificador, style={
@@ -194,7 +194,7 @@ def tarjeta_kpi(titulo, identificador, detalle):
         html.P(detalle, style={
             "color": "#94a3b8",
             "fontSize": "12px",
-            "margin": "0"
+            "margin": 0
         })
 
     ], style={
@@ -341,10 +341,7 @@ filtros = html.Div([
     selector("Originación desde", dcc.Dropdown(
         id="filtro-desde",
         options=[
-            {
-                "label": x.replace("Q", " Q"),
-                "value": x
-            }
+            {"label": x.replace("Q", " Q"), "value": x}
             for x in trimestres
         ],
         value=trimestres[0],
@@ -354,10 +351,7 @@ filtros = html.Div([
     selector("Hasta", dcc.Dropdown(
         id="filtro-hasta",
         options=[
-            {
-                "label": x.replace("Q", " Q"),
-                "value": x
-            }
+            {"label": x.replace("Q", " Q"), "value": x}
             for x in trimestres
         ],
         value=trimestres[-1],
@@ -393,8 +387,6 @@ filtros = html.Div([
 # ==========================================
 
 panorama = html.Div([
-
-    # Título y filtros adicionales
 
     html.Div([
 
@@ -449,7 +441,7 @@ panorama = html.Div([
         "color": "#c0392b"
     }),
 
-    # Cinco KPIs reales
+    # Cinco KPIs
 
     html.Div([
 
@@ -518,7 +510,7 @@ panorama = html.Div([
         "marginTop": "14px"
     }),
 
-    # Segunda sección: estados y evolución histórica
+    # Estados y evolución histórica
 
     html.Div([
 
@@ -561,7 +553,7 @@ panorama = html.Div([
 
 
 # ==========================================
-# 7. PESTAÑAS DEL TABLERO
+# 7. LAS TRES PESTAÑAS DEL TABLERO
 # ==========================================
 
 app.layout = html.Div([
@@ -579,7 +571,7 @@ app.layout = html.Div([
 
     dcc.Tabs([
 
-        # Panorama: mantiene todos los KPIs y gráficas
+        # Pantalla 1: Panorama
         dcc.Tab(
             label="Panorama",
             children=[
@@ -588,22 +580,21 @@ app.layout = html.Div([
             ]
         ),
 
-        # Evaluación: utiliza el nuevo archivo evaluacion.py
+        # Pantalla 2: Evaluación
         dcc.Tab(
             label="Evaluación",
-            children=crear_evaluacion(estados, nombres_estados)
+            children=crear_evaluacion(
+                estados,
+                nombres_estados
+            )
         ),
 
-        # Seguimiento: lo desarrollaremos después
+        # Pantalla 3: Seguimiento
         dcc.Tab(
             label="Seguimiento",
-            children=html.Div([
-                html.H2("Monitoreo y alertas"),
-                html.P(
-                    "Indicadores de seguimiento y "
-                    "alertas predictivas pendientes."
-                )
-            ], style={"padding": "24px"})
+            children=crear_seguimiento(
+                nombres_estados
+            )
         )
 
     ])
@@ -661,14 +652,17 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
         else:
             mensaje = "No hay créditos para estos filtros."
 
-        vacias = [figura_vacia() for _ in range(5)]
+        vacias = [
+            figura_vacia()
+            for _ in range(5)
+        ]
 
         return (
             "0", "USD 0", "—", "—", "—",
             subtitulo, mensaje, *vacias
         )
 
-    # Cinco KPIs
+    # Indicadores de Panorama
 
     indicadores = (
         numero(int(tabla["creditos"].sum())),
@@ -684,7 +678,7 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
         )
     )
 
-    # Gráfica 1: propósito
+    # Gráfica de propósito
 
     conteos = tabla.groupby("purpose")["creditos"].sum()
 
@@ -722,17 +716,21 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
         ]
     )
 
-    # Gráficas 2 y 3: FICO y LTV
+    # Gráficas de FICO y LTV
 
     figura_fico = grafica_barras(
-        tabla, "rango_puntaje", rangos_fico
+        tabla,
+        "rango_puntaje",
+        rangos_fico
     )
 
     figura_ltv = grafica_barras(
-        tabla, "rango_ltv", rangos_ltv
+        tabla,
+        "rango_ltv",
+        rangos_ltv
     )
 
-    # Gráfica 4: créditos por estado
+    # Gráfica por estado
 
     ranking = (
         tabla.groupby("state")["creditos"]
@@ -749,7 +747,9 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
         ],
         orientation="h",
         marker_color="#3478b7",
-        text=[numero(x) for x in ranking.values],
+        text=[
+            numero(x) for x in ranking.values
+        ],
         textposition="outside",
         cliponaxis=False
     ))
@@ -768,7 +768,7 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
         font=dict(size=11)
     )
 
-    # Gráfica 5: evolución histórica por cohorte
+    # Evolución histórica por cohorte
 
     cohortes = (
         tabla[tabla["trimestre"] <= "2025Q1"]
@@ -786,15 +786,13 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
     if cohortes.empty:
 
         figura_cohortes = figura_vacia(
-            "Sin cohortes con seguimiento suficiente "
-            "para este filtro"
+            "Sin cohortes con seguimiento suficiente"
         )
 
     else:
 
         cohortes["tasa"] = (
-            100
-            * cohortes["p1_positivos"]
+            100 * cohortes["p1_positivos"]
             / cohortes["p1_etiquetables"]
         )
 
@@ -823,7 +821,6 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
             margin=dict(l=55, r=15, t=20, b=60),
             paper_bgcolor="white",
             plot_bgcolor="white",
-
             xaxis=dict(
                 title="Trimestre de originación",
                 tickangle=-45,
@@ -831,14 +828,12 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
                 nticks=10,
                 showgrid=False
             ),
-
             yaxis=dict(
                 title="Tasa de incumplimiento",
                 ticksuffix=" %",
                 gridcolor="#edf1f5",
                 rangemode="tozero"
             ),
-
             showlegend=False,
             font=dict(size=11)
         )
@@ -856,7 +851,7 @@ def actualizar_panorama(estado, desde, hasta, proposito, fico):
 
 
 # ==========================================
-# 9. BOTÓN RESTABLECER
+# 9. RESTABLECER FILTROS
 # ==========================================
 
 @app.callback(
@@ -881,10 +876,15 @@ def restablecer_filtros(n_clicks):
 
 
 # ==========================================
-# 10. ACTIVAR INTERACCIONES DE EVALUACIÓN
+# 10. CONECTAR LOS MÓDULOS INDEPENDIENTES
 # ==========================================
 
 registrar_callbacks_evaluacion(app, datos)
+
+registrar_callbacks_seguimiento(
+    app,
+    nombres_estados
+)
 
 
 # ==========================================
