@@ -1,5 +1,5 @@
 
-from dash import html, dcc, Input, Output, State, ctx
+from dash import html, dcc, Input, Output, ctx
 
 
 # ==========================================
@@ -22,20 +22,68 @@ CAMPO = {
     "fontSize": "14px"
 }
 
+TEXTO_SECUNDARIO = {
+    "color": "#64748b",
+    "fontSize": "13px"
+}
+
+MENSAJE_INICIAL = (
+    "Completa la solicitud y selecciona Comparar perfil."
+)
+
+
+# ==========================================
+# 2. FUNCIONES AUXILIARES
+# ==========================================
 
 def numero(valor, decimales=1):
     texto = f"{valor:,.{decimales}f}"
-    return texto.replace(",", "X").replace(".", ",").replace("X", ".")
+    return (
+        texto.replace(",", "X")
+        .replace(".", ",")
+        .replace("X", ".")
+    )
+
+
+def formatear_valor(valor, unidad, decimales):
+    if unidad == "USD":
+        return "USD " + numero(valor, decimales)
+
+    if unidad == "FICO":
+        return numero(valor, decimales)
+
+    return numero(valor, decimales) + " %"
+
+
+def formatear_diferencia(valor, unidad, decimales):
+    if valor > 0:
+        signo = "+"
+    elif valor < 0:
+        signo = "-"
+    else:
+        signo = ""
+
+    cantidad = numero(abs(valor), decimales)
+
+    if unidad == "USD":
+        return signo + "USD " + cantidad
+
+    if unidad == "FICO":
+        return signo + cantidad + " puntos"
+
+    return signo + cantidad + " pp"
 
 
 def campo_numerico(titulo, identificador, minimo, maximo, paso=1):
     return html.Div([
+
         html.Label(titulo, style={
             "fontSize": "13px",
             "color": "#64748b",
             "display": "block",
             "marginBottom": "6px"
         }),
+
         dcc.Input(
             id=identificador,
             type="number",
@@ -44,28 +92,32 @@ def campo_numerico(titulo, identificador, minimo, maximo, paso=1):
             step=paso,
             style=CAMPO
         )
+
     ])
 
 
 def campo_lista(titulo, identificador, opciones):
     return html.Div([
+
         html.Label(titulo, style={
             "fontSize": "13px",
             "color": "#64748b",
             "display": "block",
             "marginBottom": "6px"
         }),
+
         dcc.Dropdown(
             id=identificador,
             options=opciones,
             placeholder="Seleccionar",
             clearable=True
         )
+
     ])
 
 
 # ==========================================
-# 2. DISEÑO DE EVALUACIÓN
+# 3. PANTALLA DE EVALUACION
 # ==========================================
 
 def crear_evaluacion(estados, nombres_estados):
@@ -92,14 +144,21 @@ def crear_evaluacion(estados, nombres_estados):
         for x in estados
     ]
 
+    # Formulario
+
     formulario = html.Div([
 
         html.Div([
+
             html.Div([
-                html.H4("Datos de la solicitud", style={"margin": "0"}),
+                html.H4(
+                    "Datos de la solicitud",
+                    style={"margin": 0}
+                ),
                 html.P(
-                    "Características del crédito al momento de la originación",
-                    style={"color": "#64748b", "fontSize": "12px"}
+                    "Características del crédito al momento "
+                    "de la originación",
+                    style=TEXTO_SECUNDARIO
                 )
             ]),
 
@@ -115,6 +174,7 @@ def crear_evaluacion(estados, nombres_estados):
                     "cursor": "pointer"
                 }
             )
+
         ], style={
             "display": "flex",
             "justifyContent": "space-between",
@@ -125,14 +185,32 @@ def crear_evaluacion(estados, nombres_estados):
 
         html.Div([
 
-            campo_numerico("Puntaje FICO", "ev-fico", 300, 850),
-            campo_numerico("DTI (%)", "ev-dti", 0, 100, 0.1),
+            campo_numerico(
+                "Puntaje FICO", "ev-fico", 300, 850
+            ),
 
-            campo_numerico("LTV (%)", "ev-ltv", 0, 200, 0.1),
-            campo_numerico("Monto del préstamo (USD)", "ev-monto", 1, None),
+            campo_numerico(
+                "DTI (%)", "ev-dti", 0, 100, 0.1
+            ),
 
-            campo_numerico("Tasa de interés (%)", "ev-tasa", 0, 30, 0.001),
-            campo_numerico("Plazo (meses)", "ev-plazo", 1, 480),
+            campo_numerico(
+                "LTV (%)", "ev-ltv", 0, 200, 0.1
+            ),
+
+            campo_numerico(
+                "Monto del préstamo (USD)",
+                "ev-monto", 1, None
+            ),
+
+            campo_numerico(
+                "Tasa de interés (%)",
+                "ev-tasa", 0, 30, 0.001
+            ),
+
+            campo_numerico(
+                "Plazo (meses)",
+                "ev-plazo", 1, 480
+            ),
 
             campo_lista(
                 "Propósito",
@@ -154,10 +232,14 @@ def crear_evaluacion(estados, nombres_estados):
 
         ], style={
             "display": "grid",
-            "gridTemplateColumns": "repeat(2, minmax(0, 1fr))",
+            "gridTemplateColumns": (
+                "repeat(2, minmax(0, 1fr))"
+            ),
             "gap": "16px",
             "marginTop": "18px"
         }),
+
+        # Botones
 
         html.Div([
 
@@ -195,33 +277,44 @@ def crear_evaluacion(estados, nombres_estados):
             "marginTop": "24px"
         }),
 
-        html.Div(id="ev-mensaje", style={
-            "marginTop": "12px",
-            "color": "#b45309",
-            "fontSize": "13px"
-        })
+        html.Div(
+            id="ev-mensaje",
+            style={
+                "marginTop": "12px",
+                "color": "#b45309",
+                "fontSize": "13px"
+            }
+        )
 
     ], style=TARJETA)
 
+    # Resultado predictivo pendiente de integración
+
     resultado_predictivo = html.Div([
 
-        html.H4("Resultado predictivo", style={"marginTop": "0"}),
+        html.H4(
+            "Resultado predictivo",
+            style={"marginTop": 0}
+        ),
 
         html.P(
             "Probabilidad de alcanzar 90 o más días de mora "
             "durante los primeros 12 meses",
-            style={"color": "#64748b", "fontSize": "13px"}
+            style=TEXTO_SECUNDARIO
         ),
 
-        html.H2("No disponible", style={
-            "color": "#17324d",
-            "marginBottom": "12px"
-        }),
+        html.H2(
+            "No disponible",
+            style={
+                "color": "#17324d",
+                "marginBottom": "12px"
+            }
+        ),
 
         html.P(
-            "La estimación estará disponible cuando se integre "
-            "el modelo predictivo desarrollado por el equipo.",
-            style={"fontSize": "13px", "color": "#64748b"}
+            "La estimación estará disponible cuando "
+            "se integre el modelo predictivo del equipo.",
+            style=TEXTO_SECUNDARIO
         ),
 
         html.Hr(),
@@ -230,44 +323,60 @@ def crear_evaluacion(estados, nombres_estados):
 
         html.P(
             "Conservadora · Moderada · Flexible",
-            style={"color": "#64748b"}
+            style=TEXTO_SECUNDARIO
         ),
 
         html.P(
-            "Los umbrales se aplicarán cuando exista una "
-            "probabilidad estimada. Por ahora no se clasifica el riesgo.",
-            style={"fontSize": "12px", "color": "#64748b"}
+            "Los escenarios modifican los umbrales de "
+            "clasificación, no la probabilidad estimada. "
+            "La clasificación estará disponible cuando "
+            "se conecte el modelo.",
+            style={
+                "fontSize": "12px",
+                "color": "#64748b"
+            }
         )
 
     ], style=TARJETA)
+
+    # Comparación descriptiva
 
     perfil = html.Div([
 
-        html.H4("Perfil frente a la cartera", style={
-            "marginTop": "0"
-        }),
+        html.H4(
+            "Perfil frente a la cartera",
+            style={"marginTop": 0}
+        ),
 
         html.P(
-            "Comparación descriptiva con las originaciones de 2026 Q1",
-            style={"fontSize": "12px", "color": "#64748b"}
+            "Comparación con los promedios de "
+            "originaciones de 2026 Q1",
+            style=TEXTO_SECUNDARIO
         ),
 
         html.Div(
-            "Completa la solicitud y selecciona Comparar perfil.",
+            MENSAJE_INICIAL,
             id="ev-perfil",
-            style={"fontSize": "13px", "marginTop": "15px"}
+            style={
+                "fontSize": "13px",
+                "marginTop": "15px",
+                "overflowX": "auto"
+            }
         )
 
     ], style=TARJETA)
+
+    # Diseño general
 
     return html.Div([
 
         html.H2("Evaluación de solicitudes"),
 
         html.P(
-            "¿Cuál es la probabilidad de que el crédito alcance "
-            "90 o más días de mora durante sus primeros 12 meses?",
-            style={"color": "#64748b"}
+            "¿Cuál es la probabilidad de que el crédito "
+            "alcance 90 o más días de mora durante sus "
+            "primeros 12 meses?",
+            style=TEXTO_SECUNDARIO
         ),
 
         html.Div([
@@ -285,7 +394,9 @@ def crear_evaluacion(estados, nombres_estados):
 
         ], style={
             "display": "grid",
-            "gridTemplateColumns": "repeat(auto-fit, minmax(360px, 1fr))",
+            "gridTemplateColumns": (
+                "repeat(auto-fit, minmax(360px, 1fr))"
+            ),
             "gap": "14px",
             "marginTop": "20px"
         })
@@ -298,12 +409,14 @@ def crear_evaluacion(estados, nombres_estados):
 
 
 # ==========================================
-# 3. INTERACCIONES DEL FORMULARIO
+# 4. INTERACCIONES DEL FORMULARIO
 # ==========================================
 
 def registrar_callbacks_evaluacion(app, datos):
 
-    # Cargar el ejemplo o limpiar el formulario
+    # --------------------------------------
+    # A. Cargar ejemplo o limpiar campos
+    # --------------------------------------
 
     @app.callback(
         Output("ev-fico", "value"),
@@ -318,42 +431,63 @@ def registrar_callbacks_evaluacion(app, datos):
 
         Input("ev-ejemplo", "n_clicks"),
         Input("ev-limpiar", "n_clicks"),
+
         prevent_initial_call=True
     )
     def cargar_o_limpiar(ejemplo, limpiar):
 
         if ctx.triggered_id == "ev-ejemplo":
             return (
-                712, 41, 88, 412000, 6.375,
-                360, "P", "SF", "FL"
+                712,
+                41,
+                88,
+                412000,
+                6.375,
+                360,
+                "P",
+                "SF",
+                "FL"
             )
 
         return (None,) * 9
 
-    # Comparar la solicitud con la cartera real
+    # --------------------------------------
+    # B. Comparar o invalidar el resultado
+    # --------------------------------------
 
     @app.callback(
         Output("ev-mensaje", "children"),
         Output("ev-perfil", "children"),
 
         Input("ev-comparar", "n_clicks"),
+        Input("ev-ejemplo", "n_clicks"),
+        Input("ev-limpiar", "n_clicks"),
 
-        State("ev-fico", "value"),
-        State("ev-dti", "value"),
-        State("ev-ltv", "value"),
-        State("ev-monto", "value"),
-        State("ev-tasa", "value"),
-        State("ev-plazo", "value"),
-        State("ev-proposito", "value"),
-        State("ev-propiedad", "value"),
-        State("ev-estado", "value"),
+        Input("ev-fico", "value"),
+        Input("ev-dti", "value"),
+        Input("ev-ltv", "value"),
+        Input("ev-monto", "value"),
+        Input("ev-tasa", "value"),
+        Input("ev-plazo", "value"),
+        Input("ev-proposito", "value"),
+        Input("ev-propiedad", "value"),
+        Input("ev-estado", "value"),
 
         prevent_initial_call=True
     )
     def comparar_perfil(
-        n, fico, dti, ltv, monto, tasa, plazo,
+        comparar, ejemplo, limpiar,
+        fico, dti, ltv, monto, tasa, plazo,
         proposito, propiedad, estado
     ):
+
+        # Si se edita un campo, se carga el ejemplo
+        # o se limpia el formulario, borrar resultados.
+
+        if ctx.triggered_id != "ev-comparar":
+            return "", MENSAJE_INICIAL
+
+        # Verificar campos completos.
 
         valores = [
             fico, dti, ltv, monto, tasa, plazo,
@@ -363,8 +497,10 @@ def registrar_callbacks_evaluacion(app, datos):
         if any(x is None or x == "" for x in valores):
             return (
                 "Completa todos los campos antes de comparar.",
-                "No se ha realizado la comparación."
+                MENSAJE_INICIAL
             )
+
+        # Verificar rangos numéricos.
 
         if not (
             300 <= fico <= 850
@@ -373,13 +509,15 @@ def registrar_callbacks_evaluacion(app, datos):
             and monto > 0
             and 0 < tasa <= 30
             and 1 <= plazo <= 480
+            and plazo == int(plazo)
         ):
             return (
-                "Revisa los valores: hay campos fuera del rango permitido.",
-                "No se ha realizado la comparación."
+                "Revisa los valores: hay campos "
+                "fuera del rango permitido.",
+                MENSAJE_INICIAL
             )
 
-        # Promedios de originaciones reales 2026 Q1
+        # Referencia real de la cartera 2026 Q1.
 
         referencia = datos[
             datos["trimestre"] == "2026Q1"
@@ -387,80 +525,150 @@ def registrar_callbacks_evaluacion(app, datos):
 
         if referencia.empty:
             return (
-                "No se encontraron datos de referencia para 2026 Q1.",
+                "No se encontraron originaciones de 2026 Q1.",
                 "Comparación no disponible."
             )
 
-        def media(columna_suma, columna_n):
-            n = referencia[columna_n].sum()
-            return referencia[columna_suma].sum() / n if n else None
+        def media(columna_suma, columna_conteo):
+            cantidad = referencia[columna_conteo].sum()
 
-        referencias = [
-            ("Puntaje FICO", fico, media("suma_puntaje", "n_puntaje"), "", 1),
-            ("LTV", ltv, media("suma_ltv", "n_ltv"), " %", 1),
-            ("DTI", dti, media("suma_dti", "n_dti"), " %", 1),
-            ("Tasa de interés", tasa, media("suma_tasa", "n_tasa"), " %", 3),
+            if cantidad == 0:
+                return None
+
+            return (
+                referencia[columna_suma].sum()
+                / cantidad
+            )
+
+        creditos = referencia["creditos"].sum()
+
+        monto_promedio = (
+            referencia["monto_total"].sum() / creditos
+            if creditos > 0 else None
+        )
+
+        variables = [
+            (
+                "Puntaje FICO",
+                fico,
+                media("suma_puntaje", "n_puntaje"),
+                "FICO",
+                1
+            ),
+            (
+                "LTV",
+                ltv,
+                media("suma_ltv", "n_ltv"),
+                "%",
+                1
+            ),
+            (
+                "DTI",
+                dti,
+                media("suma_dti", "n_dti"),
+                "%",
+                1
+            ),
+            (
+                "Tasa de interés",
+                tasa,
+                media("suma_tasa", "n_tasa"),
+                "%",
+                3
+            ),
             (
                 "Monto del préstamo",
                 monto,
-                referencia["monto_total"].sum()
-                / referencia["creditos"].sum(),
-                " USD",
+                monto_promedio,
+                "USD",
                 0
             )
         ]
 
         filas = []
 
-        for nombre, solicitud, cartera, unidad, decimales in referencias:
+        for nombre, solicitud, cartera, unidad, decimales in variables:
 
             if cartera is None:
                 continue
 
             diferencia = solicitud - cartera
 
-            filas.append(html.Tr([
+            filas.append(
 
-                html.Td(nombre, style={"padding": "10px"}),
+                html.Tr([
 
-                html.Td(
-                    numero(solicitud, decimales) + unidad,
-                    style={"padding": "10px", "fontWeight": "bold"}
-                ),
+                    html.Td(
+                        nombre,
+                        style={"padding": "10px"}
+                    ),
 
-                html.Td(
-                    numero(cartera, decimales) + unidad,
-                    style={"padding": "10px"}
-                ),
+                    html.Td(
+                        formatear_valor(
+                            solicitud, unidad, decimales
+                        ),
+                        style={
+                            "padding": "10px",
+                            "fontWeight": "bold"
+                        }
+                    ),
 
-                html.Td(
-                    ("+" if diferencia > 0 else "")
-                    + numero(diferencia, decimales)
-                    + unidad,
-                    style={"padding": "10px"}
-                )
+                    html.Td(
+                        formatear_valor(
+                            cartera, unidad, decimales
+                        ),
+                        style={"padding": "10px"}
+                    ),
 
-            ], style={"borderBottom": "1px solid #edf1f5"}))
+                    html.Td(
+                        formatear_diferencia(
+                            diferencia, unidad, decimales
+                        ),
+                        style={"padding": "10px"}
+                    )
 
-        tabla = html.Table([
+                ], style={
+                    "borderBottom": "1px solid #edf1f5"
+                })
 
-            html.Thead(html.Tr([
-                html.Th("Variable"),
-                html.Th("Solicitud"),
-                html.Th("Cartera"),
-                html.Th("Diferencia")
-            ])),
+            )
 
-            html.Tbody(filas)
+        tabla = html.Div([
 
-        ], style={
-            "width": "100%",
-            "fontSize": "12px",
-            "borderCollapse": "collapse"
-        })
+            html.Table([
+
+                html.Thead(html.Tr([
+
+                    html.Th("Variable"),
+                    html.Th("Solicitud"),
+                    html.Th("Cartera 2026 Q1"),
+                    html.Th("Diferencia")
+
+                ])),
+
+                html.Tbody(filas)
+
+            ], style={
+                "width": "100%",
+                "borderCollapse": "collapse",
+                "fontSize": "12px",
+                "minWidth": "460px"
+            }),
+
+            html.P(
+                "pp = puntos porcentuales. "
+                "La comparación es descriptiva y "
+                "no representa una predicción de riesgo.",
+                style={
+                    "fontSize": "11px",
+                    "color": "#64748b",
+                    "marginTop": "14px"
+                }
+            )
+
+        ])
 
         return (
-            "Comparación descriptiva realizada. "
-            "Este resultado no es una predicción de riesgo.",
+            "Comparación actualizada correctamente.",
             tabla
         )
