@@ -1,0 +1,2 @@
+modelo,entrenamiento,prueba,max_depth,min_samples_leaf,umbral,average_precision,roc_auc,brier_score,precision,recall,f1,alertas
+Arbol flexible,2022-2023,2024,8,1000,0.02,0.02430023302265813,0.8160260373414039,0.0048730941252743635,0.027156089193825044,0.3828593538402012,0.05071498129260417,72875
