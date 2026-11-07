@@ -1,0 +1,44 @@
+semilla: 42
+k_candidatos: [25, 50, 100, 200]
+lote_prediccion: 20000
+
+mlflow:
+  p1: knn-p1
+  p2: knn-p2
+
+p1:
+  ruta: data/modelado/p1
+  etiqueta: y_p1
+  seleccion: [2022Q1, 2022Q2, 2022Q3, 2022Q4, 2023Q1, 2023Q2]
+  validacion: [2023Q3, 2023Q4]
+  entrenamiento: [2022Q1, 2022Q2, 2022Q3, 2022Q4, 2023Q1, 2023Q2, 2023Q3, 2023Q4]
+  prueba: [2024Q1, 2024Q2, 2024Q3, 2024Q4]
+  max_validacion: 200000
+  max_entrenamiento: 300000
+
+p2:
+  ruta: data/modelado/p2
+  ruta_p1: data/modelado/p1
+  etiqueta: y_p2
+  seleccion: [202201, 202303]
+  validacion: [202307, 202309]
+  entrenamiento: [202201, 202309]
+  prueba: [202401, 202412]
+  grupos_entrenamiento: 1
+  grupos_validacion: 1
+  grupos_prueba: 1
+  max_entrenamiento: 300000
+
+versiones:
+  p1:
+    v1: {descripcion: base, variables: base, proporcion: 10, pesos: uniform}
+    v2: {descripcion: pesos_distancia, variables: base, proporcion: 10, pesos: distance}
+    v3: {descripcion: proporcion_20, variables: base, proporcion: 20, pesos: uniform}
+    v4: {descripcion: con_estado, variables: base_estado, proporcion: 10, pesos: uniform}
+    v5: {descripcion: formulario, variables: formulario, proporcion: 10, pesos: uniform}
+  p2:
+    v1: {descripcion: base, variables: completa, proporcion: 10, pesos: uniform}
+    v2: {descripcion: pesos_distancia, variables: completa, proporcion: 10, pesos: distance}
+    v3: {descripcion: solo_mes, variables: solo_mes, proporcion: 10, pesos: uniform}
+    v4: {descripcion: proporcion_20, variables: completa, proporcion: 20, pesos: uniform}
+    v5: {descripcion: proporcion_5, variables: completa, proporcion: 5, pesos: uniform}
