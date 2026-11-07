@@ -27,7 +27,7 @@ p2:
   grupos_entrenamiento: 1
   grupos_validacion: 1
   grupos_prueba: 1
-  max_entrenamiento: 300000
+  max_entrenamiento: 100000
 
 versiones:
   p1:
