@@ -1,0 +1,9 @@
+{
+  "experimento": "logistica-p1",
+  "run_name": "p1_referencia_puntaje",
+  "run_id": "d48097f422d1449085407ea4f6748fc7",
+  "pregunta": "p1",
+  "modelo": "puntaje crediticio solo (menor puntaje, mayor riesgo)",
+  "periodo_prueba": "2024Q1-2024Q4",
+  "regla_prueba": "todos los créditos"
+}
