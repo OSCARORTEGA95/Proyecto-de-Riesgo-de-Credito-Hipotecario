@@ -14,9 +14,9 @@ def spark():
     s.stop()
 
 
-def credito(loan_id, estados, salida=None, mes_inicial=24240):
+def credito(loan_id, estados, salida=None, mes_inicial=24240, edad_inicial=1):
     filas = []
-    for edad, estado in enumerate(estados, start=1):
+    for edad, estado in enumerate(estados, start=edad_inicial):
         zb = salida[1] if salida and edad == salida[0] else None
         filas.append((loan_id, mes_inicial + edad, edad, estado, int(estado) if estado.isdigit() else None, zb))
         if zb is not None:
@@ -35,6 +35,7 @@ SINTETICOS = (
     + credito("ACTIVO_MES5", ["00"] * 5)
     + credito("ADJUDICADO_MES10", ["00"] * 9 + ["RA"])
     + credito("CURADO", ["00"] * 3 + ["01"] + ["00"] * 3)
+    + credito("PREVIO", ["00"] * 16, edad_inicial=-1)   # dos meses antes del primer pago
 )
 
 
@@ -74,6 +75,7 @@ def test_etiqueta_p1(resumen):
         "ACTIVO_MES5": None,      # ventana sin observar completa
         "ADJUDICADO_MES10": 1,
         "CURADO": None,
+        "PREVIO": 0,
     }
 
 
@@ -91,6 +93,8 @@ def test_etiqueta_p2(p2):
     sano = p2[p2.loan_id == "SANO"]
     assert sano.loc[sano.y_p2.notna(), "edad"].max() == 12   # los últimos 3 meses no se alcanzan a observar
     assert p2.loc[p2.loan_id == "PREPAGO_MES6", "y_p2"].tolist() == [0] * 5
+    assert p2.edad.min() >= 1                                # sin meses antes del primer pago
+    assert sorted(p2.loc[p2.loan_id == "PREVIO", "edad"].dropna()) == list(range(1, 15))
 
 
 def test_variables_p2(p2):
