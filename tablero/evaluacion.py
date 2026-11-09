@@ -304,7 +304,8 @@ def crear_evaluacion(estados, nombres_estados):
         ),
 
         html.H2(
-            "No disponible",
+            "—",
+            id="ev-probabilidad",
             style={
                 "color": "#17324d",
                 "marginBottom": "12px"
@@ -312,8 +313,9 @@ def crear_evaluacion(estados, nombres_estados):
         ),
 
         html.P(
-            "La estimación estará disponible cuando "
-            "se integre el modelo predictivo del equipo.",
+            "Completa la solicitud y selecciona Comparar perfil "
+            "para estimar la probabilidad.",
+            id="ev-nota-modelo",
             style=TEXTO_SECUNDARIO
         ),
 
@@ -326,11 +328,11 @@ def crear_evaluacion(estados, nombres_estados):
             style=TEXTO_SECUNDARIO
         ),
 
+        html.Div(id="ev-escenarios"),
+
         html.P(
             "Los escenarios modifican los umbrales de "
-            "clasificación, no la probabilidad estimada. "
-            "La clasificación estará disponible cuando "
-            "se conecte el modelo.",
+            "clasificación, no la probabilidad estimada.",
             style={
                 "fontSize": "12px",
                 "color": "#64748b"

@@ -20,6 +20,8 @@ from seguimiento import (
     registrar_callbacks_seguimiento
 )
 
+from prediccion import registrar_callbacks_prediccion
+
 
 # ==========================================
 # 1. APLICACION PRINCIPAL
@@ -99,6 +101,8 @@ registrar_callbacks_seguimiento(
     app,
     nombres_estados
 )
+
+registrar_callbacks_prediccion(app)
 
 
 # ==========================================
