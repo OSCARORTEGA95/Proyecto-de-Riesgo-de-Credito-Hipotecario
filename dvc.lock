@@ -15,12 +15,12 @@ stages:
       size: 8399
     - path: src/riesgo_credito/procesamiento/etl.py
       hash: md5
-      md5: da6cce4d595124e3df0cbeb5f722cec7
-      size: 17552
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
     - path: src/riesgo_credito/procesamiento/tablero.py
       hash: md5
-      md5: 6e69e2787e24cd29b6b6d520badead5e
-      size: 4100
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
     params:
       params.yaml:
         etiquetas:
@@ -34,32 +34,32 @@ stages:
     outs:
     - path: data/limpios/desempeno/trimestre=2019Q1
       hash: md5
-      md5: af49d55db72941a1dc5199943547ecad.dir
-      size: 126441593
+      md5: d9119b56354900b46c2c0df785de8948.dir
+      size: 127391669
       nfiles: 4
     - path: data/limpios/originacion/trimestre=2019Q1
       hash: md5
-      md5: ea574c1549ef7f0cb32b576f4ffd1932.dir
-      size: 4966817
+      md5: 1b837bed9d40378d3844afc46c1cda9e.dir
+      size: 4991320
       nfiles: 1
     - path: data/metricas/etl/2019Q1.json
       hash: md5
-      md5: d761bad947f1ad421c64552cd84c9057
-      size: 501
+      md5: 9cfc1913b9d341abd6491c2e95d9c79b
+      size: 654
     - path: data/modelado/p1/trimestre=2019Q1
       hash: md5
-      md5: ab97b54f91c6129c2b3dd780f0e3cfde.dir
-      size: 4040697
+      md5: 9bc8af965602201bc346fc367d1b9397.dir
+      size: 4065075
       nfiles: 1
     - path: data/modelado/p2/trimestre=2019Q1
       hash: md5
-      md5: 80308909bf452ea81dd4a4f178ad7b8c.dir
-      size: 137511030
+      md5: ab4df507100ac3e65ae6bd0c15b7010e.dir
+      size: 138178135
       nfiles: 4
     - path: data/tablero/cartera_activa/trimestre=2019Q1
       hash: md5
-      md5: 906f54174c747ec30bc3e621d9394891.dir
-      size: 2000762
+      md5: a950dbea86abfa5924a3d8757bb62322.dir
+      size: 2006371
       nfiles: 1
     - path: data/tablero/originacion/trimestre=2019Q1
       hash: md5
@@ -68,6 +68,1994 @@ stages:
       nfiles: 1
     - path: data/tablero/serie_mensual/trimestre=2019Q1
       hash: md5
-      md5: ec0a3be6d943b02d685eb2615b0a05ec.dir
-      size: 162391
+      md5: dfc11a7c2129bb461607ccafefc957fe.dir
+      size: 162012
+      nfiles: 1
+  etl@2019Q2:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2019Q2
+    deps:
+    - path: data/crudos/historical_data_2019Q2.zip
+      hash: md5
+      md5: 68ab686fb833f55777f7d436f780c58a
+      size: 243323406
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2019Q2
+      hash: md5
+      md5: f7433007cae6b6c19f9d440e8ea7a0ba.dir
+      size: 196521681
+      nfiles: 6
+    - path: data/limpios/originacion/trimestre=2019Q2
+      hash: md5
+      md5: 04decd6e48b0f4349cba40a7d659d926.dir
+      size: 7239347
+      nfiles: 1
+    - path: data/metricas/etl/2019Q2.json
+      hash: md5
+      md5: fa9b0626d895f4d550af75a2da5685b2
+      size: 662
+    - path: data/modelado/p1/trimestre=2019Q2
+      hash: md5
+      md5: d8d6e5ad78ca9ea73823e223f2d3c88f.dir
+      size: 5901145
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2019Q2
+      hash: md5
+      md5: 3541fa38a5a487d829adb87929ae41d6.dir
+      size: 215619643
+      nfiles: 6
+    - path: data/tablero/cartera_activa/trimestre=2019Q2
+      hash: md5
+      md5: 48d6ef69b785b6efff1cb2eb79e2ce3e.dir
+      size: 3469231
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2019Q2
+      hash: md5
+      md5: f7fff628f336606b00990a49676b5d18.dir
+      size: 167506
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2019Q2
+      hash: md5
+      md5: 263d832fdf3c0aae2066e74bd53d3ea4.dir
+      size: 166365
+      nfiles: 1
+  etl@2019Q3:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2019Q3
+    deps:
+    - path: data/crudos/historical_data_2019Q3.zip
+      hash: md5
+      md5: d5293984e11b975efbea81f534c4bfa1
+      size: 359219713
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2019Q3
+      hash: md5
+      md5: f91444722c588081b497496cf8154155.dir
+      size: 290300620
+      nfiles: 9
+    - path: data/limpios/originacion/trimestre=2019Q3
+      hash: md5
+      md5: 094b9218bc05e5fcfa42faa3836cdf16.dir
+      size: 9495731
+      nfiles: 1
+    - path: data/metricas/etl/2019Q3.json
+      hash: md5
+      md5: 5784fde15cc7c53de5fe06d20b608651
+      size: 665
+    - path: data/modelado/p1/trimestre=2019Q3
+      hash: md5
+      md5: 8f89dc99c483990cde9ac2fdb9c47ede.dir
+      size: 7745994
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2019Q3
+      hash: md5
+      md5: 424163ba60de4ce9b668b52484fb3d3e.dir
+      size: 324180037
+      nfiles: 9
+    - path: data/tablero/cartera_activa/trimestre=2019Q3
+      hash: md5
+      md5: c0734489de659422fb7a146c0db482a7.dir
+      size: 5983528
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2019Q3
+      hash: md5
+      md5: 3b4015530e1050391ba5ed17f5edc739.dir
+      size: 176241
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2019Q3
+      hash: md5
+      md5: e42c695dd5d9fbf89bdbc37937dcb27c.dir
+      size: 168292
+      nfiles: 1
+  etl@2019Q4:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2019Q4
+    deps:
+    - path: data/crudos/historical_data_2019Q4.zip
+      hash: md5
+      md5: 407f261bd27245d7ac6f1945a298195b
+      size: 367788351
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2019Q4
+      hash: md5
+      md5: 9a66ee86d3e5e622ca01d72de588258d.dir
+      size: 296495196
+      nfiles: 9
+    - path: data/limpios/originacion/trimestre=2019Q4
+      hash: md5
+      md5: 2e57f2a0fbbe708065b7a8974d09a48d.dir
+      size: 9550364
+      nfiles: 1
+    - path: data/metricas/etl/2019Q4.json
+      hash: md5
+      md5: 6b1e17ec754f0fb0a99dab3564ad73e3
+      size: 665
+    - path: data/modelado/p1/trimestre=2019Q4
+      hash: md5
+      md5: 4326adfd92ddc58925a9ba3955905ffb.dir
+      size: 7805282
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2019Q4
+      hash: md5
+      md5: 0f79851570ea728d38d49ecb36a44ae0.dir
+      size: 332215715
+      nfiles: 9
+    - path: data/tablero/cartera_activa/trimestre=2019Q4
+      hash: md5
+      md5: c65fb90f6d04f2adcc6c5081855fe418.dir
+      size: 6707439
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2019Q4
+      hash: md5
+      md5: 706b8e1c27b817019110ccfb9115ca2e.dir
+      size: 175307
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2019Q4
+      hash: md5
+      md5: 9c12a020aed264ef1e96154de95d01c7.dir
+      size: 163851
+      nfiles: 1
+  etl@2020Q1:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2020Q1
+    deps:
+    - path: data/crudos/historical_data_2020Q1.zip
+      hash: md5
+      md5: 09784bdc0dd2e5c16255da8d7df2b3d4
+      size: 360994774
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2020Q1
+      hash: md5
+      md5: d231aac0a89cd201c3f6280ddafe5c9c.dir
+      size: 290703687
+      nfiles: 9
+    - path: data/limpios/originacion/trimestre=2020Q1
+      hash: md5
+      md5: 08aeef2ebf24035ffe67a56853271d34.dir
+      size: 9083511
+      nfiles: 1
+    - path: data/metricas/etl/2020Q1.json
+      hash: md5
+      md5: 6f6f9be5d995b53b834ebdce5241852e
+      size: 664
+    - path: data/modelado/p1/trimestre=2020Q1
+      hash: md5
+      md5: aaf676b35b2035ac95bd5e1e39a9c5f4.dir
+      size: 7402641
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2020Q1
+      hash: md5
+      md5: 93d1228b75e50de3ae629cc5fc29659c.dir
+      size: 328510621
+      nfiles: 9
+    - path: data/tablero/cartera_activa/trimestre=2020Q1
+      hash: md5
+      md5: 4227228e1d16fd614beb17b8f1fb0e18.dir
+      size: 7388088
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2020Q1
+      hash: md5
+      md5: a3567329fb4adb6f5905cec76bd73d9f.dir
+      size: 169023
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2020Q1
+      hash: md5
+      md5: 2353e7c01764eb048d21bfbfd9a54f47.dir
+      size: 154276
+      nfiles: 1
+  etl@2020Q2:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2020Q2
+    deps:
+    - path: data/crudos/historical_data_2020Q2.zip
+      hash: md5
+      md5: f3fd8e18d35b25cb72ce104e2801fce2
+      size: 741528198
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2020Q2
+      hash: md5
+      md5: 7e15aae4d8d15ca5bd3d9c3681e96cb5.dir
+      size: 601447542
+      nfiles: 18
+    - path: data/limpios/originacion/trimestre=2020Q2
+      hash: md5
+      md5: 999da402f8cf80872e5b36843def1bf1.dir
+      size: 16041722
+      nfiles: 1
+    - path: data/metricas/etl/2020Q2.json
+      hash: md5
+      md5: 82e73dcef3c6ef6b7c65477737059e91
+      size: 665
+    - path: data/modelado/p1/trimestre=2020Q2
+      hash: md5
+      md5: 8a5adedd7e2ab1b654f2b04549b7ea2d.dir
+      size: 13072778
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2020Q2
+      hash: md5
+      md5: 775a2b21aee5ddc556b895d651f058df.dir
+      size: 691164765
+      nfiles: 18
+    - path: data/tablero/cartera_activa/trimestre=2020Q2
+      hash: md5
+      md5: 0dd347c36701645c904c60d35184c5af.dir
+      size: 16751207
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2020Q2
+      hash: md5
+      md5: 7b5e585f6bbd5473b14945363b26ea41.dir
+      size: 180338
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2020Q2
+      hash: md5
+      md5: 2f002f5375a8cfb1f6fcbc4c5f7797b0.dir
+      size: 148976
+      nfiles: 1
+  etl@2020Q3:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2020Q3
+    deps:
+    - path: data/crudos/historical_data_2020Q3.zip
+      hash: md5
+      md5: bf51f2ebb5acdca17d0280d89266b476
+      size: 1032110973
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2020Q3
+      hash: md5
+      md5: ad39140f72346b53e43564942f94c198.dir
+      size: 840657588
+      nfiles: 25
+    - path: data/limpios/originacion/trimestre=2020Q3
+      hash: md5
+      md5: e3a77e3409f1e04839121ff8fe73b850.dir
+      size: 20585418
+      nfiles: 1
+    - path: data/metricas/etl/2020Q3.json
+      hash: md5
+      md5: b7827a05ecc07139ee035894897ec3f9
+      size: 667
+    - path: data/modelado/p1/trimestre=2020Q3
+      hash: md5
+      md5: 5220ec089fb075a699c61e5f43b7e7c0.dir
+      size: 16793424
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2020Q3
+      hash: md5
+      md5: b89f75bd7eb356fb32b12ab3a6edd953.dir
+      size: 969347815
+      nfiles: 25
+    - path: data/tablero/cartera_activa/trimestre=2020Q3
+      hash: md5
+      md5: 5b7d2dbf125223f72f818b63b4460acb.dir
+      size: 25591106
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2020Q3
+      hash: md5
+      md5: 2420f63800973c6221247e162408214e.dir
+      size: 186858
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2020Q3
+      hash: md5
+      md5: b1dad05cccaf89e1fabfaa10372b534f.dir
+      size: 144272
+      nfiles: 1
+  etl@2020Q4:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2020Q4
+    deps:
+    - path: data/crudos/historical_data_2020Q4.zip
+      hash: md5
+      md5: 153d76117098e1dbba5b989d5b1b9104
+      size: 1120602183
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2020Q4
+      hash: md5
+      md5: 637d298987b245e5304b970c7324285d.dir
+      size: 914657473
+      nfiles: 27
+    - path: data/limpios/originacion/trimestre=2020Q4
+      hash: md5
+      md5: c371de3eca2be55f37a54f688844a73d.dir
+      size: 22114279
+      nfiles: 1
+    - path: data/metricas/etl/2020Q4.json
+      hash: md5
+      md5: 9519cc57dfc305a8e654d0713b7c947b
+      size: 666
+    - path: data/modelado/p1/trimestre=2020Q4
+      hash: md5
+      md5: 6c61b655955310d65204fd6fdab2b543.dir
+      size: 17990530
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2020Q4
+      hash: md5
+      md5: e8ee4d30bc05bc6676406473ebbcc639.dir
+      size: 1056421950
+      nfiles: 27
+    - path: data/tablero/cartera_activa/trimestre=2020Q4
+      hash: md5
+      md5: 093d7c57eda2eca6cf87483406804310.dir
+      size: 29838722
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2020Q4
+      hash: md5
+      md5: 52c2a87a029c2d43338f59a9414fcf42.dir
+      size: 187056
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2020Q4
+      hash: md5
+      md5: 011f1f6899c4e2939c68cafe17dada93.dir
+      size: 139401
+      nfiles: 1
+  etl@2021Q1:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2021Q1
+    deps:
+    - path: data/crudos/historical_data_2021Q1.zip
+      hash: md5
+      md5: fa14214a345a4f12e2b1cc38326abf4f
+      size: 1038575753
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2021Q1
+      hash: md5
+      md5: f42726bc4e40dc2f9b10442c79bfd6f3.dir
+      size: 845090818
+      nfiles: 25
+    - path: data/limpios/originacion/trimestre=2021Q1
+      hash: md5
+      md5: da13afe960eb1b962e09cc131aff44c7.dir
+      size: 21037665
+      nfiles: 1
+    - path: data/metricas/etl/2021Q1.json
+      hash: md5
+      md5: 9d280da4e898006381903aa3952850f5
+      size: 666
+    - path: data/modelado/p1/trimestre=2021Q1
+      hash: md5
+      md5: 522a110dafee928a35a1bbd7ce129c64.dir
+      size: 17135311
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2021Q1
+      hash: md5
+      md5: bec1f462d1a93a342333f68ec4f2a384.dir
+      size: 979466452
+      nfiles: 25
+    - path: data/tablero/cartera_activa/trimestre=2021Q1
+      hash: md5
+      md5: d2819273d29f4ac37f27fdea174a2003.dir
+      size: 29470327
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2021Q1
+      hash: md5
+      md5: dd7872e762fb896fd97f9edb23b564f9.dir
+      size: 184893
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2021Q1
+      hash: md5
+      md5: 059cbdeded3aa4127683c92e6181bf3c.dir
+      size: 132798
+      nfiles: 1
+  etl@2021Q2:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2021Q2
+    deps:
+    - path: data/crudos/historical_data_2021Q2.zip
+      hash: md5
+      md5: 6c215f9eb207c6f4ddf65ba9a137b322
+      size: 789805013
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2021Q2
+      hash: md5
+      md5: 211be8495f38431e561910638772d47b.dir
+      size: 641544986
+      nfiles: 20
+    - path: data/limpios/originacion/trimestre=2021Q2
+      hash: md5
+      md5: 27a135a6e5488e5cc32c537b1d9ef86c.dir
+      size: 16628340
+      nfiles: 1
+    - path: data/metricas/etl/2021Q2.json
+      hash: md5
+      md5: 4f752b099c44762f79de60dccf048f4c
+      size: 665
+    - path: data/modelado/p1/trimestre=2021Q2
+      hash: md5
+      md5: a9175ade9a33d85e175095d3c41a1386.dir
+      size: 13568177
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2021Q2
+      hash: md5
+      md5: f1fbc6ff60bef7c7c448b752443b6539.dir
+      size: 743600101
+      nfiles: 20
+    - path: data/tablero/cartera_activa/trimestre=2021Q2
+      hash: md5
+      md5: 9dc68271bc52e759d9f77d3684f7ce03.dir
+      size: 23711752
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2021Q2
+      hash: md5
+      md5: 82c59946b76d048e89e4526413d9930f.dir
+      size: 182430
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2021Q2
+      hash: md5
+      md5: 83c22795c15ddd994775ee67c88cf7ce.dir
+      size: 128186
+      nfiles: 1
+  etl@2021Q3:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2021Q3
+    deps:
+    - path: data/crudos/historical_data_2021Q3.zip
+      hash: md5
+      md5: 231115440661696e2adb73341bb7fe6c
+      size: 827351311
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2021Q3
+      hash: md5
+      md5: 3da67bde6ca9b7fed87c47ca8f398a5f.dir
+      size: 669720117
+      nfiles: 21
+    - path: data/limpios/originacion/trimestre=2021Q3
+      hash: md5
+      md5: 84887e0a41bbe454a9e29f6b8023f7de.dir
+      size: 17971615
+      nfiles: 1
+    - path: data/metricas/etl/2021Q3.json
+      hash: md5
+      md5: 4ed068bae415c6d320257bdc6970c90a
+      size: 668
+    - path: data/modelado/p1/trimestre=2021Q3
+      hash: md5
+      md5: 60a0f330ffa664a8d8bd2a2b390e63f4.dir
+      size: 14675989
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2021Q3
+      hash: md5
+      md5: 130011c21916b6d303a0850c36cb76be.dir
+      size: 778482724
+      nfiles: 21
+    - path: data/tablero/cartera_activa/trimestre=2021Q3
+      hash: md5
+      md5: 07ad2bfdd51dbbfc6b02de16c130ae0c.dir
+      size: 26382313
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2021Q3
+      hash: md5
+      md5: e7a947e9ee969aa26da225c5d696ba10.dir
+      size: 183416
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2021Q3
+      hash: md5
+      md5: 7308665f33c9d9a98b6f5c3c74979f50.dir
+      size: 124404
+      nfiles: 1
+  etl@2021Q4:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2021Q4
+    deps:
+    - path: data/crudos/historical_data_2021Q4.zip
+      hash: md5
+      md5: 1c4d3c5d226c17d1ca24d9f3ae6e19f5
+      size: 654299323
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2021Q4
+      hash: md5
+      md5: bf6011e03444b603f2f9e822f9dbcff9.dir
+      size: 527755164
+      nfiles: 16
+    - path: data/limpios/originacion/trimestre=2021Q4
+      hash: md5
+      md5: 6423b5bdc88e8739cc3437bd2e78d758.dir
+      size: 15004289
+      nfiles: 1
+    - path: data/metricas/etl/2021Q4.json
+      hash: md5
+      md5: 3cb191f50f6e7a56e60869fbb8ccffeb
+      size: 664
+    - path: data/modelado/p1/trimestre=2021Q4
+      hash: md5
+      md5: 1f712a8de3375934952cefe108aedd74.dir
+      size: 12289480
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2021Q4
+      hash: md5
+      md5: eaf58839fa1fcb14eb59ee0a694ce247.dir
+      size: 613678907
+      nfiles: 16
+    - path: data/tablero/cartera_activa/trimestre=2021Q4
+      hash: md5
+      md5: aecbe3653b5df23aa639341ef5b16a52.dir
+      size: 22334058
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2021Q4
+      hash: md5
+      md5: ca90003d4f84d470aacc9a0494496c16.dir
+      size: 178753
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2021Q4
+      hash: md5
+      md5: a5d00cfdbc3c50607ddfa9605ae7549f.dir
+      size: 117842
+      nfiles: 1
+  etl@2022Q1:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2022Q1
+    deps:
+    - path: data/crudos/historical_data_2022Q1.zip
+      hash: md5
+      md5: b592df795e953ab9164a58cec2bf758b
+      size: 416914653
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2022Q1
+      hash: md5
+      md5: 128c62355dd06027eac8ae5db8722430.dir
+      size: 337211854
+      nfiles: 11
+    - path: data/limpios/originacion/trimestre=2022Q1
+      hash: md5
+      md5: be1bcbe72e7df8125751df4d69d83062.dir
+      size: 10233011
+      nfiles: 1
+    - path: data/metricas/etl/2022Q1.json
+      hash: md5
+      md5: 45430f2566d5aeed18288ae1df5dbeb9
+      size: 664
+    - path: data/modelado/p1/trimestre=2022Q1
+      hash: md5
+      md5: c3ac6ca0b0ed6ac9f151e8fa77aae56f.dir
+      size: 8419060
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2022Q1
+      hash: md5
+      md5: 3dfb2fe08931fb8f8b2ea45b0cb0191b.dir
+      size: 391472724
+      nfiles: 11
+    - path: data/tablero/cartera_activa/trimestre=2022Q1
+      hash: md5
+      md5: 7c691a93e078d8c77281f74bcd8d5fdb.dir
+      size: 15401974
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2022Q1
+      hash: md5
+      md5: ff5e64e9d42aedf0b557c4ecc7136e7f.dir
+      size: 168781
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2022Q1
+      hash: md5
+      md5: f61f798cfe7f53b12cd2b7fbe7231a7b.dir
+      size: 108785
+      nfiles: 1
+  etl@2022Q2:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2022Q2
+    deps:
+    - path: data/crudos/historical_data_2022Q2.zip
+      hash: md5
+      md5: 2806cad0a46d1391a53059b8afcc3296
+      size: 289354188
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2022Q2
+      hash: md5
+      md5: f7339b8307f53a1486a56fdf8b57c318.dir
+      size: 234940252
+      nfiles: 8
+    - path: data/limpios/originacion/trimestre=2022Q2
+      hash: md5
+      md5: a3712a8446767e32e09aa304ceb4cbcc.dir
+      size: 7663737
+      nfiles: 1
+    - path: data/metricas/etl/2022Q2.json
+      hash: md5
+      md5: 91ee5c4c164f6f559c428b6786af14de
+      size: 664
+    - path: data/modelado/p1/trimestre=2022Q2
+      hash: md5
+      md5: 14ea7ba80d03bd1872367c30e8e7ab3e.dir
+      size: 6288590
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2022Q2
+      hash: md5
+      md5: c2ab1d8eda5c99f0289c456410939c66.dir
+      size: 271233823
+      nfiles: 8
+    - path: data/tablero/cartera_activa/trimestre=2022Q2
+      hash: md5
+      md5: 04b6eccbab2869298a01d77f98da8d57.dir
+      size: 11398342
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2022Q2
+      hash: md5
+      md5: 652bb59ab3eb402ce669246fa0cb261c.dir
+      size: 158499
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2022Q2
+      hash: md5
+      md5: 75ac6d5877a2113859314a9ccde96b9d.dir
+      size: 102113
+      nfiles: 1
+  etl@2022Q3:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2022Q3
+    deps:
+    - path: data/crudos/historical_data_2022Q3.zip
+      hash: md5
+      md5: e0660a1f3566a7d46f1eeb6ef9cae7cf
+      size: 206587385
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2022Q3
+      hash: md5
+      md5: c051dc0c8ff43cb0a8ef179b255ce31f.dir
+      size: 166702251
+      nfiles: 6
+    - path: data/limpios/originacion/trimestre=2022Q3
+      hash: md5
+      md5: 4ee72fa9e2544d6eb100fe6f637659ac.dir
+      size: 5922574
+      nfiles: 1
+    - path: data/metricas/etl/2022Q3.json
+      hash: md5
+      md5: f27cb86156770b5352c6c7b1302cf133
+      size: 662
+    - path: data/modelado/p1/trimestre=2022Q3
+      hash: md5
+      md5: cca5c569ca48c1096774ee3941d591bc.dir
+      size: 4858429
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2022Q3
+      hash: md5
+      md5: 78d550e0eeafb1ccfd9435596656ee19.dir
+      size: 190708599
+      nfiles: 6
+    - path: data/tablero/cartera_activa/trimestre=2022Q3
+      hash: md5
+      md5: bf36431960b306cac539b749d9c551d1.dir
+      size: 8781338
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2022Q3
+      hash: md5
+      md5: 9a401232288546d78eeead97eb01ee80.dir
+      size: 145096
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2022Q3
+      hash: md5
+      md5: e87096daf9a93aa9aa20a2948755c584.dir
+      size: 92623
+      nfiles: 1
+  etl@2022Q4:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2022Q4
+    deps:
+    - path: data/crudos/historical_data_2022Q4.zip
+      hash: md5
+      md5: a25ec7a9a553dfcda13766a73602b419
+      size: 122511784
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2022Q4
+      hash: md5
+      md5: 81e7a410293abfa7b5599fdd67223a62.dir
+      size: 97938850
+      nfiles: 4
+    - path: data/limpios/originacion/trimestre=2022Q4
+      hash: md5
+      md5: f32756237e0e287dade310ee6b543043.dir
+      size: 3953300
+      nfiles: 1
+    - path: data/metricas/etl/2022Q4.json
+      hash: md5
+      md5: dda80d25014c42e21b50c8fd7859af76
+      size: 658
+    - path: data/modelado/p1/trimestre=2022Q4
+      hash: md5
+      md5: 7a5384268a3e91dbbd85fa643ae6a06f.dir
+      size: 3249920
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2022Q4
+      hash: md5
+      md5: 89c553dfbf2a1ed3375fcb62c1b07999.dir
+      size: 111554779
+      nfiles: 4
+    - path: data/tablero/cartera_activa/trimestre=2022Q4
+      hash: md5
+      md5: b044d459f8afd3363af8fd7aec7afc79.dir
+      size: 5585461
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2022Q4
+      hash: md5
+      md5: 66b2f4bee4f7e7103b5cb902ee967c34.dir
+      size: 131066
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2022Q4
+      hash: md5
+      md5: 23823a6e5cc0732a7a8bceaaf717eb8f.dir
+      size: 82692
+      nfiles: 1
+  etl@2023Q1:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2023Q1
+    deps:
+    - path: data/crudos/historical_data_2023Q1.zip
+      hash: md5
+      md5: 2cd3979a6e37c9ad919a69636885ff69
+      size: 95951826
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2023Q1
+      hash: md5
+      md5: 0b02f60f1fe7535f73d988926b65b862.dir
+      size: 76523987
+      nfiles: 3
+    - path: data/limpios/originacion/trimestre=2023Q1
+      hash: md5
+      md5: 960722d6fab3f30e4f65a6ddf9c069ff.dir
+      size: 3354945
+      nfiles: 1
+    - path: data/metricas/etl/2023Q1.json
+      hash: md5
+      md5: 9463d058d6c02227d33494538f9cbcc2
+      size: 656
+    - path: data/modelado/p1/trimestre=2023Q1
+      hash: md5
+      md5: 20ab7e97080e8cc10afcfd2e11f1eb4b.dir
+      size: 2756407
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2023Q1
+      hash: md5
+      md5: 7d0901b42c639ea64df524ea9baecce8.dir
+      size: 86784818
+      nfiles: 3
+    - path: data/tablero/cartera_activa/trimestre=2023Q1
+      hash: md5
+      md5: 51e07f3b9dd10108e11ed7872101692b.dir
+      size: 4965152
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2023Q1
+      hash: md5
+      md5: 9b49f8364ddbf7ad7eb7cc27275caee4.dir
+      size: 128919
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2023Q1
+      hash: md5
+      md5: f50aa47d1ad0d2094b6125667190fa84.dir
+      size: 74416
+      nfiles: 1
+  etl@2023Q2:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2023Q2
+    deps:
+    - path: data/crudos/historical_data_2023Q2.zip
+      hash: md5
+      md5: b47d087bd39c82a6aa7bee48086b3ff6
+      size: 131276119
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2023Q2
+      hash: md5
+      md5: f51e9f71bd41d11c0d6a0da6ea930da7.dir
+      size: 105319905
+      nfiles: 4
+    - path: data/limpios/originacion/trimestre=2023Q2
+      hash: md5
+      md5: 68560a3edecf75d5b5d244b202a11d16.dir
+      size: 4911226
+      nfiles: 1
+    - path: data/metricas/etl/2023Q2.json
+      hash: md5
+      md5: 910335f9dc20402cc373a2d3f5ee52dd
+      size: 658
+    - path: data/modelado/p1/trimestre=2023Q2
+      hash: md5
+      md5: 8aff5ed4b9dfb4b5bf6bb583f7a3d318.dir
+      size: 4042935
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2023Q2
+      hash: md5
+      md5: c6eb92f16041f2f00e3a711f8274cf1b.dir
+      size: 118208982
+      nfiles: 4
+    - path: data/tablero/cartera_activa/trimestre=2023Q2
+      hash: md5
+      md5: 4a8b1a5979150ba841a7129a30a07c2d.dir
+      size: 7228872
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2023Q2
+      hash: md5
+      md5: b29b0fd715d4a2fa24fe1cdb97a18b15.dir
+      size: 137632
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2023Q2
+      hash: md5
+      md5: bd453a08f07f25307939a40130b97ed3.dir
+      size: 70946
+      nfiles: 1
+  etl@2023Q3:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2023Q3
+    deps:
+    - path: data/crudos/historical_data_2023Q3.zip
+      hash: md5
+      md5: a92bf20a6d3a512bed18e08eef7b3d7f
+      size: 111422994
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2023Q3
+      hash: md5
+      md5: acb062bec12ec09686e189417599ed29.dir
+      size: 89386128
+      nfiles: 3
+    - path: data/limpios/originacion/trimestre=2023Q3
+      hash: md5
+      md5: a2baee57419947f363decdd24338be9c.dir
+      size: 4682906
+      nfiles: 1
+    - path: data/metricas/etl/2023Q3.json
+      hash: md5
+      md5: ca805acd9fdc0a52983043bfbc45933b
+      size: 658
+    - path: data/modelado/p1/trimestre=2023Q3
+      hash: md5
+      md5: 3437727d53c9f2322a27933f0cb5a0ed.dir
+      size: 3852583
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2023Q3
+      hash: md5
+      md5: 9d3f3094b1592ce3857e259c238f8444.dir
+      size: 99964671
+      nfiles: 3
+    - path: data/tablero/cartera_activa/trimestre=2023Q3
+      hash: md5
+      md5: 4121e70b3e555dbd09d854374900eeb5.dir
+      size: 6401180
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2023Q3
+      hash: md5
+      md5: 37fd7211cdc6cf421238927961801e4a.dir
+      size: 135432
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2023Q3
+      hash: md5
+      md5: e898d9365b0c0f1d3f030eda7b1d8ffd.dir
+      size: 65207
+      nfiles: 1
+  etl@2023Q4:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2023Q4
+    deps:
+    - path: data/crudos/historical_data_2023Q4.zip
+      hash: md5
+      md5: 1b1485959d8e22f03671a98a86e3f5ea
+      size: 75675281
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2023Q4
+      hash: md5
+      md5: 0a8dfdf7f89adb1aa30ae3bc4bb0cbca.dir
+      size: 59754454
+      nfiles: 2
+    - path: data/limpios/originacion/trimestre=2023Q4
+      hash: md5
+      md5: 9a699c5129c29be3c0e7bc4f329dbf52.dir
+      size: 3773989
+      nfiles: 1
+    - path: data/metricas/etl/2023Q4.json
+      hash: md5
+      md5: 060cb89d93a1d0354ffc25b8c1607bc5
+      size: 655
+    - path: data/modelado/p1/trimestre=2023Q4
+      hash: md5
+      md5: 7b4df5a033ae9bdee383000ba8a3163f.dir
+      size: 3099126
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2023Q4
+      hash: md5
+      md5: 0bc0d8a40626af5375c7f959875c941f.dir
+      size: 65542484
+      nfiles: 2
+    - path: data/tablero/cartera_activa/trimestre=2023Q4
+      hash: md5
+      md5: 34dd1e5cff2fbde057b5a8a10e3a943a.dir
+      size: 4477821
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2023Q4
+      hash: md5
+      md5: e19d840b7eaa5229faabd9beec61182a.dir
+      size: 130542
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2023Q4
+      hash: md5
+      md5: 281bb0a65ceaf66ee351fd4eb7b43cb6.dir
+      size: 58040
+      nfiles: 1
+  etl@2024Q1:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2024Q1
+    deps:
+    - path: data/crudos/historical_data_2024Q1.zip
+      hash: md5
+      md5: 3af1bbeae6b64243a07a4c9ce2518a63
+      size: 75705125
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2024Q1
+      hash: md5
+      md5: a0450ef507d612c8bf9a725bdbbe9093.dir
+      size: 59275995
+      nfiles: 2
+    - path: data/limpios/originacion/trimestre=2024Q1
+      hash: md5
+      md5: c6be4b20c84cd58e04d4a3083f3bd8d6.dir
+      size: 3957098
+      nfiles: 1
+    - path: data/metricas/etl/2024Q1.json
+      hash: md5
+      md5: c7de9461a570ee485297aefb282d90d1
+      size: 655
+    - path: data/modelado/p1/trimestre=2024Q1
+      hash: md5
+      md5: 1adba5108d6b42abffbb0bb502c9f2a5.dir
+      size: 3220461
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2024Q1
+      hash: md5
+      md5: e1159d692568ca76ef358d791176960b.dir
+      size: 65233637
+      nfiles: 2
+    - path: data/tablero/cartera_activa/trimestre=2024Q1
+      hash: md5
+      md5: c5c2c6a2e41bbb70462ddef77e2a80a7.dir
+      size: 5669075
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2024Q1
+      hash: md5
+      md5: ea480ea29c1505634c1f7206674813e1.dir
+      size: 135736
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2024Q1
+      hash: md5
+      md5: 1dbaa7beb738781c46684753dde3331e.dir
+      size: 51903
+      nfiles: 1
+  etl@2024Q2:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2024Q2
+    deps:
+    - path: data/crudos/historical_data_2024Q2.zip
+      hash: md5
+      md5: f69e1ddb870079affb2015960e200910
+      size: 78669679
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2024Q2
+      hash: md5
+      md5: 5097b3d56596d4649b1d6ac756ac23ee.dir
+      size: 61102954
+      nfiles: 2
+    - path: data/limpios/originacion/trimestre=2024Q2
+      hash: md5
+      md5: ae0c9654fc3317b847f4e76e99dcba14.dir
+      size: 4691242
+      nfiles: 1
+    - path: data/metricas/etl/2024Q2.json
+      hash: md5
+      md5: f6d45326174e6301544cbcd6af3d1d71
+      size: 657
+    - path: data/modelado/p1/trimestre=2024Q2
+      hash: md5
+      md5: a44e2d7dec10d0631c39581bdb2e3331.dir
+      size: 3805963
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2024Q2
+      hash: md5
+      md5: 0a55b27718b56617f495cccea6561627.dir
+      size: 66052427
+      nfiles: 2
+    - path: data/tablero/cartera_activa/trimestre=2024Q2
+      hash: md5
+      md5: d916d49b2e3343fc250c44237b6ffc09.dir
+      size: 6421945
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2024Q2
+      hash: md5
+      md5: 97c122adecf094f36f3a5b89d647d55d.dir
+      size: 140652
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2024Q2
+      hash: md5
+      md5: c91df097bb24c674186fae8bec607915.dir
+      size: 47760
+      nfiles: 1
+  etl@2024Q3:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2024Q3
+    deps:
+    - path: data/crudos/historical_data_2024Q3.zip
+      hash: md5
+      md5: 1bce29c45771a86929996556d3b1c30c
+      size: 81048314
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2024Q3
+      hash: md5
+      md5: 296baad19065b54c29da8d2efca70f7c.dir
+      size: 61931057
+      nfiles: 3
+    - path: data/limpios/originacion/trimestre=2024Q3
+      hash: md5
+      md5: 52d38c5f90c6ecc68adf96325ab1cd01.dir
+      size: 5410797
+      nfiles: 1
+    - path: data/metricas/etl/2024Q3.json
+      hash: md5
+      md5: 4443899400eb1fa941fbd8e1baae45f7
+      size: 657
+    - path: data/modelado/p1/trimestre=2024Q3
+      hash: md5
+      md5: b5e8e3c65374a5cf692bf5fd276ce7e5.dir
+      size: 4387926
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2024Q3
+      hash: md5
+      md5: 6c50546e271b43464d5ae76bc1b212f5.dir
+      size: 66635143
+      nfiles: 3
+    - path: data/tablero/cartera_activa/trimestre=2024Q3
+      hash: md5
+      md5: 06e6a79c40e46a32b8ecdea2dac46944.dir
+      size: 8156857
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2024Q3
+      hash: md5
+      md5: a66fe3c0adc8cab1fbfce82b1aee5db0.dir
+      size: 150778
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2024Q3
+      hash: md5
+      md5: 8926517306fc7ee527705df8a74ea33b.dir
+      size: 41475
+      nfiles: 1
+  etl@2024Q4:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2024Q4
+    deps:
+    - path: data/crudos/historical_data_2024Q4.zip
+      hash: md5
+      md5: 51bd5a3bb5b9338acc4dbc2cd999ade7
+      size: 66474478
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2024Q4
+      hash: md5
+      md5: 40986c20a6ff5f85760f390582e4d073.dir
+      size: 49415904
+      nfiles: 2
+    - path: data/limpios/originacion/trimestre=2024Q4
+      hash: md5
+      md5: 02274943c33ca12d9a485760454025b7.dir
+      size: 5219659
+      nfiles: 1
+    - path: data/metricas/etl/2024Q4.json
+      hash: md5
+      md5: 049c9d56c2491de2dd8a8bf657449de3
+      size: 657
+    - path: data/modelado/p1/trimestre=2024Q4
+      hash: md5
+      md5: 47c8271daba3ad6f9adfa8a16b28e325.dir
+      size: 4244544
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2024Q4
+      hash: md5
+      md5: c3911ea80a605b1f6f28bf6a0557a084.dir
+      size: 52750861
+      nfiles: 2
+    - path: data/tablero/cartera_activa/trimestre=2024Q4
+      hash: md5
+      md5: 20ce15916ac3c1b69bc573a0efed07a8.dir
+      size: 8164193
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2024Q4
+      hash: md5
+      md5: b8b8f559467bee0d0a0574328d8aa45c.dir
+      size: 153252
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2024Q4
+      hash: md5
+      md5: e26a4ed452236a8785f8d871efd5783c.dir
+      size: 35005
+      nfiles: 1
+  etl@2025Q1:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2025Q1
+    deps:
+    - path: data/crudos/historical_data_2025Q1.zip
+      hash: md5
+      md5: ccacd8ac2119189c05e9de114f1c67d1
+      size: 39331745
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2025Q1
+      hash: md5
+      md5: b73ebe72779bb8e9836a483865673c5f.dir
+      size: 27882117
+      nfiles: 2
+    - path: data/limpios/originacion/trimestre=2025Q1
+      hash: md5
+      md5: 8a49158dbdc9966d1c4c529e07119a45.dir
+      size: 3941345
+      nfiles: 1
+    - path: data/metricas/etl/2025Q1.json
+      hash: md5
+      md5: a035fcc18680bf1390083f4c16c4625b
+      size: 655
+    - path: data/modelado/p1/trimestre=2025Q1
+      hash: md5
+      md5: 911a2e2d79026197ef5d67296f1d01a4.dir
+      size: 3230275
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2025Q1
+      hash: md5
+      md5: 1efcd3e1b11e17ab63f596adf90aa260.dir
+      size: 29001668
+      nfiles: 2
+    - path: data/tablero/cartera_activa/trimestre=2025Q1
+      hash: md5
+      md5: c98c00db7710af5eb7be1bcab0dfaa75.dir
+      size: 6112652
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2025Q1
+      hash: md5
+      md5: 4f0669997b973159d9a810514d8bd2b3.dir
+      size: 142829
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2025Q1
+      hash: md5
+      md5: 659b5997f0a682375cde39aaef627c3c.dir
+      size: 27681
+      nfiles: 1
+  etl@2025Q2:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2025Q2
+    deps:
+    - path: data/crudos/historical_data_2025Q2.zip
+      hash: md5
+      md5: a663a5683c7cd27cebee7390fbd4a479
+      size: 38986282
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2025Q2
+      hash: md5
+      md5: 4b49246a9abd75f593995420a28fa983.dir
+      size: 25172733
+      nfiles: 2
+    - path: data/limpios/originacion/trimestre=2025Q2
+      hash: md5
+      md5: b58c995ff06fe6eadeafe728570ce08d.dir
+      size: 4970440
+      nfiles: 1
+    - path: data/metricas/etl/2025Q2.json
+      hash: md5
+      md5: e59800f688c7a3378c49800cbf4531d1
+      size: 654
+    - path: data/modelado/p1/trimestre=2025Q2
+      hash: md5
+      md5: d1855fd87cfeb5018c7cb519ebc2d68a.dir
+      size: 4082624
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2025Q2
+      hash: md5
+      md5: 3586ff7439c978d327453ac4e075b156.dir
+      size: 25916358
+      nfiles: 2
+    - path: data/tablero/cartera_activa/trimestre=2025Q2
+      hash: md5
+      md5: 9ef21d3943270d72af44774afdf87a10.dir
+      size: 8037313
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2025Q2
+      hash: md5
+      md5: c820a2ab9154be10d631e81300b2e14d.dir
+      size: 145771
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2025Q2
+      hash: md5
+      md5: 52e2a814127aaa204ad993594b3ad8c5.dir
+      size: 23045
+      nfiles: 1
+  etl@2025Q3:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2025Q3
+    deps:
+    - path: data/crudos/historical_data_2025Q3.zip
+      hash: md5
+      md5: 789aa911df796cde3116276742154494
+      size: 28780955
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2025Q3
+      hash: md5
+      md5: de7f9bed9b6222ec7ccb52afff5547e2.dir
+      size: 13750153
+      nfiles: 1
+    - path: data/limpios/originacion/trimestre=2025Q3
+      hash: md5
+      md5: c4eba895fcc34f6400f7b2ceb75d76e0.dir
+      size: 5375544
+      nfiles: 1
+    - path: data/metricas/etl/2025Q3.json
+      hash: md5
+      md5: 608aca06b165c3c357656f5659b766fd
+      size: 651
+    - path: data/modelado/p1/trimestre=2025Q3
+      hash: md5
+      md5: 38fe478d40cd8930f574623d1cde23a5.dir
+      size: 4393467
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2025Q3
+      hash: md5
+      md5: bf5ecd9b4fd708b853cb91e9315b8106.dir
+      size: 13606762
+      nfiles: 1
+    - path: data/tablero/cartera_activa/trimestre=2025Q3
+      hash: md5
+      md5: be31bd9384caea4b1246d0efdb535e01.dir
+      size: 7115463
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2025Q3
+      hash: md5
+      md5: 636acd0fd6a05c8e9d461b5680e16eaa.dir
+      size: 148761
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2025Q3
+      hash: md5
+      md5: 636c9461159a8a417dcdefeaf8f7f2e4.dir
+      size: 18108
+      nfiles: 1
+  etl@2025Q4:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2025Q4
+    deps:
+    - path: data/crudos/historical_data_2025Q4.zip
+      hash: md5
+      md5: 56e722084a8d6346128456603721cd2b
+      size: 21190218
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2025Q4
+      hash: md5
+      md5: 9981af6e0ac7e8eada5131a9b781687f.dir
+      size: 9177727
+      nfiles: 1
+    - path: data/limpios/originacion/trimestre=2025Q4
+      hash: md5
+      md5: 528e8348f8321b63ef89d671cea530ce.dir
+      size: 5978865
+      nfiles: 1
+    - path: data/metricas/etl/2025Q4.json
+      hash: md5
+      md5: ce8448f4099489db7962f2d2f3f98596
+      size: 645
+    - path: data/modelado/p1/trimestre=2025Q4
+      hash: md5
+      md5: 63e061dd993f4ccda91d8b60ebd47a3b.dir
+      size: 4878616
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2025Q4
+      hash: md5
+      md5: 08dc184da1de5b8b74f2642f09cc2495.dir
+      size: 8198087
+      nfiles: 1
+    - path: data/tablero/cartera_activa/trimestre=2025Q4
+      hash: md5
+      md5: ad45072d8ef257e8c276de24cfc5377f.dir
+      size: 6759348
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2025Q4
+      hash: md5
+      md5: 55d986e5399aaf2e5f5263911dbf1c8f.dir
+      size: 154267
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2025Q4
+      hash: md5
+      md5: 1f15a304bbb823edb08fbbfaeb68ec12.dir
+      size: 13430
+      nfiles: 1
+  etl@2026Q1:
+    cmd: PYTHONPATH=src python -m riesgo_credito.procesamiento.etl --trimestre 
+      2026Q1
+    deps:
+    - path: data/crudos/historical_data_2026Q1.zip
+      hash: md5
+      md5: 7899fe419e5141edf15df4f775fbfbbf
+      size: 5920276
+      isexec: true
+    - path: src/riesgo_credito/procesamiento/esquema.py
+      hash: md5
+      md5: 56123ef1e489e206c962d75540021fc2
+      size: 8399
+    - path: src/riesgo_credito/procesamiento/etl.py
+      hash: md5
+      md5: 3f63fd5506226ad085093df1b0d65872
+      size: 19822
+    - path: src/riesgo_credito/procesamiento/tablero.py
+      hash: md5
+      md5: f4810bae92fcd1a8e7c818cf1108a280
+      size: 4346
+    params:
+      params.yaml:
+        etiquetas:
+          ventana_p1: 12
+          ventana_p2: 3
+        pandemia:
+        - 202003
+        - 202112
+        variables:
+          historial_meses: 12
+    outs:
+    - path: data/limpios/desempeno/trimestre=2026Q1
+      hash: md5
+      md5: 0635e213ee7ecd26dfb27001022cabe3.dir
+      size: 2249799
+      nfiles: 1
+    - path: data/limpios/originacion/trimestre=2026Q1
+      hash: md5
+      md5: 4887e4fbcc1b47c74c19edb70f5115f4.dir
+      size: 2758963
+      nfiles: 1
+    - path: data/metricas/etl/2026Q1.json
+      hash: md5
+      md5: fb0d7f21a17646ae701c50ee84de0680
+      size: 622
+    - path: data/modelado/p1/trimestre=2026Q1
+      hash: md5
+      md5: 70f26b851f12dbc8811f0f1098b8d2db.dir
+      size: 2254140
+      nfiles: 1
+    - path: data/modelado/p2/trimestre=2026Q1
+      hash: md5
+      md5: 35352744981e214307e99d1cdaf9076d.dir
+      size: 950537
+      nfiles: 1
+    - path: data/tablero/cartera_activa/trimestre=2026Q1
+      hash: md5
+      md5: fd9d741812bf527712e9d25658cde6c6.dir
+      size: 1562558
+      nfiles: 1
+    - path: data/tablero/originacion/trimestre=2026Q1
+      hash: md5
+      md5: 601bfb8bdc611815be1952091bc9d738.dir
+      size: 135774
+      nfiles: 1
+    - path: data/tablero/serie_mensual/trimestre=2026Q1
+      hash: md5
+      md5: 8917b6325f2f6d0abd8b0d88b6d1f577.dir
+      size: 9315
       nfiles: 1

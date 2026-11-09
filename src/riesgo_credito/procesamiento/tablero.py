@@ -48,7 +48,7 @@ def originacion(orig: DataFrame, p1: DataFrame) -> DataFrame:
 
 
 def serie_mensual(perf: DataFrame, orig: DataFrame) -> DataFrame:
-    """Mora y planes de asistencia de los créditos activos, por mes y estado."""
+    """Mora y planes de asistencia de los créditos activos desde su primer pago, por mes y estado."""
     def cuenta(condicion):
         return F.sum(F.coalesce(condicion, F.lit(False)).cast("int"))
 
@@ -56,14 +56,16 @@ def serie_mensual(perf: DataFrame, orig: DataFrame) -> DataFrame:
         return F.sum(F.when(F.coalesce(condicion, F.lit(False)), F.col("current_upb")).otherwise(0.0))
 
     mora_90 = (F.col("dlq_num") >= 3) | F.col("es_ra")
+    # Desde el primer pago, igual que P2: antes no hay cuota y Freddie Mac marca esos meses de forma distinta según el trimestre
     return (
-        perf.where(F.col("zero_balance_code").isNull())
+        perf.where(F.col("zero_balance_code").isNull() & (F.col("edad") >= 1))
         .join(orig.select("loan_id", "state"), "loan_id")
         .groupBy("period", "state")
         .agg(
             F.count("*").alias("activos"),
             F.sum("current_upb").alias("saldo"),
             cuenta(F.col("dlq_num") == 0).alias("al_dia"),
+            cuenta(F.col("dlq_status") == "XX").alias("sin_dato_mora"),
             cuenta((F.col("dlq_num") >= 1) | F.col("es_ra")).alias("mora_30"),
             cuenta((F.col("dlq_num") >= 2) | F.col("es_ra")).alias("mora_60"),
             cuenta(mora_90).alias("mora_90"),
