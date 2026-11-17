@@ -7,6 +7,7 @@
 
 Uso, desde package-src:  tox run -e train   (o  PYTHONPATH=. python modelo_riesgo/train_pipeline.py)
 """
+import gc
 import json
 import math
 import os
@@ -22,7 +23,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # permite correrlo
 from modelo_riesgo import __version__ as _version  # noqa: E402
 from modelo_riesgo.config.core import TRAINED_MODEL_DIR, config  # noqa: E402
 from modelo_riesgo.pipeline import corregir, crear_pipeline  # noqa: E402
-from modelo_riesgo.processing.data_manager import load_dataset, muestrear, save_pipeline  # noqa: E402
+from modelo_riesgo.processing.data_manager import (  # noqa: E402
+    load_muestra, load_validacion, recorrer, save_pipeline)
 
 
 def log(mensaje):
@@ -70,10 +72,9 @@ def run_training() -> dict:
 
     log(f"Selección del número de épocas: {config.seleccion[0]}-{config.seleccion[-1]}, "
         f"validación {config.validacion[0]}-{config.validacion[-1]}")
-    sel, _ = muestrear(load_dataset(config.seleccion), config.semilla)
-    val = load_dataset(config.validacion)
-    if len(val) > config.max_validacion:
-        val = val.sample(n=config.max_validacion, random_state=config.semilla)
+    sel, _ = load_muestra(config.seleccion, config.semilla)
+    val = load_validacion(config.validacion)
+    log(f"Muestra de selección: {len(sel)} créditos ({int(sel[y].sum())} positivos); validación: {len(val)}")
     pipe_sel = crear_pipeline(config.red.epocas_max, config.red.paciencia)
     prep = pipe_sel[:-1].fit(sel[config.variables], sel[y])
     red_sel = pipe_sel[-1].fit(prep.transform(sel[config.variables]), sel[y].to_numpy(),
@@ -81,17 +82,22 @@ def run_training() -> dict:
     epocas, historial = red_sel.mejor_epoca_, red_sel.historial_
     log(f"Mejor época {epocas}: área bajo la curva en validación {red_sel.mejor_auc_validacion_:.4f}")
     del sel, val
+    gc.collect()
 
     log(f"Entrenamiento final: {config.entrenamiento[0]}-{config.entrenamiento[-1]}, {epocas} épocas")
-    ent, r = muestrear(load_dataset(config.entrenamiento), config.semilla)
+    ent, r = load_muestra(config.entrenamiento, config.semilla)
+    log(f"Muestra de entrenamiento: {len(ent)} créditos ({int(ent[y].sum())} positivos), r = {r:.6f}")
     pipeline = crear_pipeline(epocas).fit(ent[config.variables], ent[y].to_numpy())
     n_entrenamiento, positivos = len(ent), int(ent[y].sum())
     del ent
+    gc.collect()
 
     log(f"Prueba: {config.prueba[0]}-{config.prueba[-1]}")
-    prueba = load_dataset(config.prueba)
-    p = corregir(pipeline.predict_proba(prueba[config.variables])[:, 1], r)
-    metr = metricas(prueba[y], p)
+    etiquetas, probabilidades = [], []
+    for lote in recorrer(config.prueba):  # por lotes: solo se guardan la etiqueta y la probabilidad
+        probabilidades.append(corregir(pipeline.predict_proba(lote[config.variables])[:, 1], r))
+        etiquetas.append(lote[y].to_numpy())
+    metr = metricas(np.concatenate(etiquetas), np.concatenate(probabilidades))
     metr.update({"auc_validacion": red_sel.mejor_auc_validacion_, "mejor_epoca": epocas,
                  "n_entrenamiento": n_entrenamiento, "positivos_entrenamiento": positivos,
                  "n_parametros": pipeline[-1].n_parametros()})
