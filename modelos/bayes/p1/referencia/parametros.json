@@ -1,0 +1,9 @@
+{
+  "experimento": "bayes-p1",
+  "run_name": "p1_referencia_puntaje",
+  "run_id": "ac85feeb9010462c9230c5e9b5a7f395",
+  "pregunta": "p1",
+  "modelo": "puntaje crediticio solo (menor puntaje, mayor riesgo)",
+  "periodo_prueba": "2024Q1-2024Q4",
+  "regla_prueba": "todos los créditos"
+}

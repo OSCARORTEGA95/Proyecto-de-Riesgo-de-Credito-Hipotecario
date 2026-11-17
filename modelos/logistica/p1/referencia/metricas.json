@@ -1,0 +1,10 @@
+{
+  "auc_roc": 0.775562407557404,
+  "auc_pr": 0.0182786493112996,
+  "captura_decil": 0.412071967498549,
+  "precision_decil": 0.02039702375822345,
+  "lift_decil": 4.120688106753711,
+  "tasa_observada": 0.004949907207195129,
+  "n_prueba": 1044262,
+  "positivos_prueba": 5169
+}

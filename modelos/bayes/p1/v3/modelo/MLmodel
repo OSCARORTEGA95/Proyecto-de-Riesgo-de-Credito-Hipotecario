@@ -1,0 +1,26 @@
+flavors:
+  python_function:
+    artifacts:
+      pipeline:
+        path: artifacts/pipeline.joblib
+        uri: /tmp/tmpny2cppdn/pipeline.joblib
+    cloudpickle_version: 3.1.2
+    code: code
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.pyfunc.model
+    python_model: python_model.pkl
+    python_version: 3.14.4
+    streamable: false
+mlflow_version: 3.18.0
+model_id: null
+model_size_bytes: 7052
+model_uuid: 42fb7d440a5d4d1d9b1ffe6e4389c796
+prompts: null
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+utc_time_created: '2026-11-09 05:08:59.895229'
