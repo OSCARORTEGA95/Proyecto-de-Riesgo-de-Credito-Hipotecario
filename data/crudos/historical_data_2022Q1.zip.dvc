@@ -1,0 +1,6 @@
+outs:
+- md5: b592df795e953ab9164a58cec2bf758b
+  size: 416914653
+  isexec: true
+  hash: md5
+  path: historical_data_2022Q1.zip

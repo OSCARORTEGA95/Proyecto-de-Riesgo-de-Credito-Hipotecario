@@ -1,0 +1,41 @@
+# Regresión logística y naive Bayes de las preguntas 1 y 2.
+# La partición temporal, la semilla y el tamaño de los lotes de predicción se toman de
+# config/modelos_knn.yaml, para comparar con los mismos datos y la misma prueba.
+
+max_entrenamiento:
+  p1: 300000    # igual que k vecinos: todos los positivos y 10 negativos por positivo
+  p2: 500000    # más que k vecinos (100.000): estos modelos predicen rápido
+
+tramos: 10      # tramos por cuantiles de cada variable numérica en la preparación "tramos"
+
+mlflow:
+  logistica: {p1: logistica-p1, p2: logistica-p2}
+  bayes: {p1: bayes-p1, p2: bayes-p2}
+
+# preparacion: estandar = mediana, estandarización y variables indicadoras (como k vecinos)
+#              tramos   = cada numérica en 10 tramos por cuantiles, como una tarjeta de puntaje
+versiones:
+  logistica:
+    p1:
+      v1: {descripcion: base, variables: base, preparacion: estandar, proporcion: 10}
+      v2: {descripcion: tramos, variables: base, preparacion: tramos, proporcion: 10}
+      v3: {descripcion: formulario, variables: formulario, preparacion: tramos, proporcion: 10}
+    p2:
+      v1: {descripcion: base, variables: completa, preparacion: estandar, proporcion: 10}
+      v2: {descripcion: tramos, variables: completa, preparacion: tramos, proporcion: 10}
+      v3: {descripcion: solo_mes, variables: solo_mes, preparacion: tramos, proporcion: 10}
+  bayes:
+    p1:
+      v1: {descripcion: gaussiano, variables: base, preparacion: estandar, proporcion: 10}
+      v2: {descripcion: bernoulli_tramos, variables: base, preparacion: tramos, proporcion: 10}
+      v3: {descripcion: formulario, variables: formulario, preparacion: tramos, proporcion: 10}
+    p2:
+      v1: {descripcion: gaussiano, variables: completa, preparacion: estandar, proporcion: 10}
+      v2: {descripcion: bernoulli_tramos, variables: completa, preparacion: tramos, proporcion: 10}
+      v3: {descripcion: solo_mes, variables: solo_mes, preparacion: tramos, proporcion: 10}
+
+# Hiperparámetro que se elige por el área bajo la curva en validación
+candidatos:
+  logistica: {parametro: C, valores: [0.001, 0.01, 0.1, 1.0, 10.0]}
+  gaussiano: {parametro: var_smoothing, valores: [1.0e-9, 1.0e-7, 1.0e-5, 1.0e-3, 1.0e-1]}
+  bernoulli: {parametro: alpha, valores: [0.01, 0.1, 1.0, 10.0]}

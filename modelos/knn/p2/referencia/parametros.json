@@ -1,0 +1,9 @@
+{
+  "experimento": "knn-p2",
+  "run_name": "p2_referencia_puntaje",
+  "run_id": "d33fd9450d6846d88c71efc470ed806c",
+  "pregunta": "p2",
+  "modelo": "puntaje crediticio solo (menor puntaje, mayor riesgo)",
+  "periodo_prueba": "202401-202412",
+  "regla_prueba": "grupo_muestra >= 99"
+}

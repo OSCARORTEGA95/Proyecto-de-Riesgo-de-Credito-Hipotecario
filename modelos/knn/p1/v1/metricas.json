@@ -1,0 +1,22 @@
+{
+  "auc_roc": 0.8224271963300616,
+  "auc_pr": 0.02444493150030351,
+  "captura_decil": 0.4685625846391952,
+  "precision_decil": 0.023193235465923563,
+  "lift_decil": 4.685589950496474,
+  "tasa_observada": 0.004949907207195129,
+  "prob_media": 0.005177944671734662,
+  "n_prueba": 1044262,
+  "positivos_prueba": 5169,
+  "auc_validacion_k25": 0.7743910016269293,
+  "auc_validacion_k50": 0.7923001687365172,
+  "auc_validacion_k100": 0.7991526044148877,
+  "auc_validacion_k200": 0.8020732591241293,
+  "auc_validacion": 0.8020732591241293,
+  "tiempo_seleccion_s": 186.1102011203766,
+  "tiempo_entrenamiento_s": 0.5061092376708984,
+  "tiempo_prediccion_s": 1094.9064161777496,
+  "n_entrenamiento": 164901,
+  "positivos_entrenamiento": 14991,
+  "tamano_modelo_mb": 3.078615
+}

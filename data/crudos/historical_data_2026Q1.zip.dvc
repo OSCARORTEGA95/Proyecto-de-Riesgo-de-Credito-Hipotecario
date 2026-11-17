@@ -1,0 +1,6 @@
+outs:
+- md5: 7899fe419e5141edf15df4f775fbfbbf
+  size: 5920276
+  isexec: true
+  hash: md5
+  path: historical_data_2026Q1.zip
