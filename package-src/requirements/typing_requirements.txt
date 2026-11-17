@@ -1,0 +1,3 @@
+mypy>=1.8
+types-PyYAML
+flake8>=7.0

@@ -1,0 +1,6 @@
+-r requirements.txt
+
+# Pruebas
+pytest>=7.4,<10.0
+httpx>=0.26
+requests>=2.31

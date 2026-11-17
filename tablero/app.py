@@ -109,5 +109,14 @@ registrar_callbacks_prediccion(app)
 # 4. EJECUTAR EL TABLERO
 # ==========================================
 
+# En el EC2 el puerto 8050 lo usa MLflow: allí se ejecuta con
+#   TABLERO_HOST=0.0.0.0 TABLERO_PUERTO=8060 TABLERO_DEBUG=0 python tablero/app.py
 if __name__ == "__main__":
-    app.run(debug=True, dev_tools_ui=False)
+    import os
+
+    app.run(
+        host=os.environ.get("TABLERO_HOST", "127.0.0.1"),
+        port=int(os.environ.get("TABLERO_PUERTO", "8050")),
+        debug=os.environ.get("TABLERO_DEBUG", "1") == "1",
+        dev_tools_ui=False,
+    )

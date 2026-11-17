@@ -1,11 +1,13 @@
 """Probabilidad de la pregunta 1 en la vista Evaluación.
 
-Carga el modelo de k vecinos más cercanos empaquetado en MLflow (versión 5, que recibe
-los nueve campos del formulario) y clasifica la probabilidad en los tres escenarios de
-tolerancia. Para usar otra versión o un modelo del servidor de MLflow, define la variable
-MODELO_P1 con una ruta local o una dirección de MLflow (por ejemplo runs:/<run_id>/modelo)
-y MODELO_P1_DESCRIPCION con el nombre que se mostrará en la vista.
-Si la versión nueva pide más campos, hay que agregarlos al formulario y a estimar_p1.
+Por defecto consulta la API de inferencia (carpeta api/, red neuronal empaquetada en
+package-src), que recibe los nueve campos del formulario. La dirección se define con
+API_P1_URL (por defecto http://localhost:8001/api/v1/predict) y el nombre que se muestra
+con MODELO_P1_DESCRIPCION.
+
+Para volver al modelo local de MLflow sin API, define PREDICCION_P1=mlflow y, si quieres,
+MODELO_P1 con una ruta local o una dirección de MLflow (por ejemplo runs:/<run_id>/modelo).
+Si el modelo nuevo pide más campos, hay que agregarlos al formulario y a estimar_p1.
 """
 import os
 from functools import lru_cache
@@ -15,8 +17,13 @@ import pandas as pd
 from dash import Input, Output, ctx, html
 
 RAIZ = Path(__file__).resolve().parents[1]
+PREDICCION_P1 = os.environ.get("PREDICCION_P1", "api")  # "api" o "mlflow"
+API_P1_URL = os.environ.get("API_P1_URL", "http://localhost:8001/api/v1/predict")
 MODELO_P1 = os.environ.get("MODELO_P1", str(RAIZ / "modelos" / "knn" / "p1" / "v5" / "modelo"))
-DESCRIPCION_P1 = os.environ.get("MODELO_P1_DESCRIPCION", "k vecinos más cercanos, versión 5")
+DESCRIPCION_P1 = os.environ.get(
+    "MODELO_P1_DESCRIPCION",
+    "red neuronal servida por la API" if PREDICCION_P1 == "api" else "k vecinos más cercanos, versión 5")
+FUENTE_P1 = f"API ({API_P1_URL})" if PREDICCION_P1 == "api" else f"MLflow ({MODELO_P1})"
 
 # Incumplimiento a 12 meses en las cosechas de 2024, el periodo de prueba
 TASA_BASE_P1 = 0.00495
@@ -41,14 +48,25 @@ def cargar_modelo():
     return mlflow.pyfunc.load_model(MODELO_P1)
 
 
+def consultar_api(solicitud: dict) -> float:
+    """Envía la solicitud a la ruta predict de la API y devuelve la probabilidad."""
+    import requests
+    respuesta = requests.post(API_P1_URL, json={"inputs": [solicitud]}, timeout=10)
+    if respuesta.status_code != 200:
+        raise RuntimeError(f"la API respondió {respuesta.status_code}: {respuesta.text[:300]}")
+    return float(respuesta.json()["predictions"][0])
+
+
 def estimar_p1(fico, dti, ltv, monto, tasa, plazo, proposito, propiedad, estado):
     """Probabilidad de llegar a 90 días de mora o más en los primeros 12 meses."""
-    solicitud = pd.DataFrame([{
+    solicitud = {
         "credit_score": float(fico), "dti": float(dti), "oltv": float(ltv),
         "orig_upb": float(monto), "orig_rate": float(tasa), "orig_term": float(plazo),
         "purpose": str(proposito), "prop_type": str(propiedad), "state": str(estado),
-    }])
-    return float(cargar_modelo().predict(solicitud)[0])
+    }
+    if PREDICCION_P1 == "api":
+        return consultar_api(solicitud)
+    return float(cargar_modelo().predict(pd.DataFrame([solicitud]))[0])
 
 
 def nivel(probabilidad, escenario="Moderada"):
@@ -111,11 +129,11 @@ def registrar_callbacks_prediccion(app):
             p = estimar_p1(*valores)
         except Exception as error:
             return ("No disponible", ESTILO,
-                    f"No se pudo usar el modelo ({MODELO_P1}): {error}", tabla_escenarios())
+                    f"No se pudo usar el modelo ({FUENTE_P1}): {error}", tabla_escenarios())
 
         n = nivel(p)
         veces = f"{p / TASA_BASE_P1:.1f}".replace(".", ",")
         nota = (f"Nivel {n.lower()} en el escenario moderado: {veces} veces la tasa de las "
                 f"cosechas de 2024 ({porcentaje(TASA_BASE_P1, 3)}). Modelo: {DESCRIPCION_P1}, "
-                "empaquetado en MLflow.")
+                f"consultado en {FUENTE_P1}.")
         return porcentaje(p), {**ESTILO, "color": COLORES[n]}, nota, tabla_escenarios(p)

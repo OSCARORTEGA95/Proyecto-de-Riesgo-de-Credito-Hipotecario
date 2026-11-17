@@ -1,0 +1,11 @@
+# Dependencias de la API
+uvicorn>=0.30,<1.0
+fastapi>=0.110,<1.0
+pydantic>=2.5,<3.0
+pydantic-settings>=2.1,<3.0
+loguru>=0.7,<1.0
+typing_extensions>=4.9
+
+# Modelo empaquetado en package-src (Taller 5). Si cambia la versión del paquete,
+# copia el nuevo .whl a model-pkg/ y actualiza esta línea.
+model-pkg/modelo_riesgo_hipotecario-0.0.1-py3-none-any.whl
