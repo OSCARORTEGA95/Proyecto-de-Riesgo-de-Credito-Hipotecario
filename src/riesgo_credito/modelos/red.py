@@ -16,6 +16,7 @@ Uso, desde la raíz del repositorio:
 """
 import argparse
 import copy
+import gc
 import json
 import os
 import time
@@ -24,6 +25,8 @@ from pathlib import Path
 import mlflow
 import numpy as np
 import pandas as pd
+import pyarrow as pa
+import pyarrow.dataset as ds
 import yaml
 from mlflow.entities import Metric
 from sklearn.metrics import roc_auc_score
@@ -49,6 +52,37 @@ def cargar_config():
     cfg["propia"] = propia
     base.EXPORTAR = base.RAIZ / "modelos" / "red"
     return cfg
+
+
+def datos_muestra(cfg, etapa, proporcion, maximo, semilla):
+    """Igual que base.datos + base.muestrear, pero sin cargar todos los créditos en memoria.
+
+    Cuenta positivos y negativos leyendo solo la etiqueta, y después recorre la tabla por
+    lotes guardando todos los positivos y un poco más de los negativos necesarios, elegidos
+    por un hash del loan_id (la misma muestra siempre, sin importar el orden de los lotes).
+    base.muestrear toma de ahí la muestra exacta y calcula r con los totales reales.
+    """
+    c, y = cfg[PREGUNTA], cfg[PREGUNTA]["etiqueta"]
+    d = base.dataset(c["ruta"])
+    filtro = ds.field("trimestre").isin(c[etapa]) & ds.field(y).is_valid()
+    etiquetas = d.to_table(columns=[y], filter=filtro).column(y).to_numpy(zero_copy_only=False)
+    positivos, negativos = int((etiquetas == 1).sum()), int((etiquetas == 0).sum())
+    del etiquetas
+    fraccion = min(1.0, 1.2 * proporcion * positivos / max(negativos, 1))
+    columnas = ["loan_id"] + base.VARS_P1 + [y]
+    partes = []
+    for lote in d.to_batches(columns=columnas, filter=filtro, batch_size=200_000):
+        yy = lote.column(y).to_numpy(zero_copy_only=False)
+        ids = np.asarray(lote.column("loan_id").to_pylist(), dtype=object)
+        azar = pd.util.hash_array(ids).astype(np.float64) / 2.0 ** 64
+        conservar = (yy == 1) | (azar < fraccion)
+        if conservar.any():
+            partes.append(lote.filter(pa.array(conservar)).to_pandas())
+    df = pd.concat(partes, ignore_index=True)
+    df[y] = df[y].astype(int)
+    df = df.sort_values("loan_id", kind="stable").reset_index(drop=True)
+    log(f"{etapa}: {positivos} positivos y {negativos} negativos; leídos {len(df)} para la muestra")
+    return base.muestrear(df, y, proporcion, maximo, semilla, total_positivos=positivos, total_negativos=negativos)
 
 
 def crear_red(v, e, epocas, paciencia, semilla):
@@ -90,8 +124,7 @@ def correr_version(cfg, version):
     log(f"red {PREGUNTA} {version} ({v['descripcion']}): capas {v['capas']}, dropout {v['dropout']}; "
         f"selección del número de épocas")
     t0 = time.time()
-    sel, info = base.datos(cfg, PREGUNTA, "seleccion")
-    sel, _ = base.muestrear(sel, y, v["proporcion"], maximo, semilla, **info)
+    sel, _ = datos_muestra(cfg, "seleccion", v["proporcion"], maximo, semilla)
     val, _ = base.datos(cfg, PREGUNTA, "validacion")
     prep = base.crear_preparacion(numericas + banderas, categoricas)
     A = prep.fit_transform(preparar(sel, numericas, banderas, categoricas))
@@ -103,10 +136,10 @@ def correr_version(cfg, version):
     t_sel = time.time() - t0
     log(f"Mejor época {epocas} de {len(historial_sel)}: área bajo la curva en validación {auc_val:.4f}")
     del sel, val, A, B, red_sel
+    gc.collect()
 
     log(f"Entrenamiento final con {epocas} épocas")
-    ent, info = base.datos(cfg, PREGUNTA, "entrenamiento")
-    ent, muestra = base.muestrear(ent, y, v["proporcion"], maximo, semilla, **info)
+    ent, muestra = datos_muestra(cfg, "entrenamiento", v["proporcion"], maximo, semilla)
     t1 = time.time()
     prep = base.crear_preparacion(numericas + banderas, categoricas)
     A = prep.fit_transform(preparar(ent, numericas, banderas, categoricas))
@@ -116,6 +149,7 @@ def correr_version(cfg, version):
     modelo.pipeline = Pipeline(prep.steps + [("red", red)])
     n_columnas = A.shape[1]
     del ent, A
+    gc.collect()
 
     log("Predicción sobre prueba")
     prueba, _ = base.datos(cfg, PREGUNTA, "prueba")
