@@ -22,7 +22,7 @@ from seguimiento import (
 )
 
 from prediccion import registrar_callbacks_prediccion
-
+from inicio import crear_inicio
 
 # ==========================================
 # 1. APLICACION PRINCIPAL
@@ -112,37 +112,47 @@ app.layout = html.Div(
 
         # Navegación lateral
         
-dcc.Tabs(
-    [
-        dcc.Tab(
-            label="Panorama",
-            children=crear_panorama(),
-        ),
-        dcc.Tab(
-            label="Evaluación",
-            children=crear_evaluacion(
-                estados,
-                nombres_estados
-            ),
-        ),
-        dcc.Tab(
-            label="Seguimiento",
-            children=crear_seguimiento(
-                nombres_estados
-            ),
-        ),
-    ],
-    vertical=False,
-    style={
-        "width": "100%",
-        "backgroundColor": "#ffffff",
-    },
-    colors={
-        "border": "#e3e9f2",
-        "primary": "#206bc4",
-        "background": "#ffffff",
-    },
-)
+
+        dcc.Tabs(
+            [
+                dcc.Tab(
+                    label="Inicio",
+                    value="inicio",
+                    children=crear_inicio(),
+                ),
+                dcc.Tab(
+                    label="Panorama",
+                    value="panorama",
+                    children=crear_panorama(),
+                ),
+                dcc.Tab(
+                    label="Evaluación",
+                    value="evaluacion",
+                    children=crear_evaluacion(
+                        estados,
+                        nombres_estados
+                    ),
+                ),
+                dcc.Tab(
+                    label="Seguimiento",
+                    value="seguimiento",
+                    children=crear_seguimiento(
+                        nombres_estados
+                    ),
+                ),
+            ],
+            value="inicio",
+            vertical=False,
+            style={
+                "width": "100%",
+                "backgroundColor": "#ffffff",
+            },
+            colors={
+                "border": "#e3e9f2",
+                "primary": "#206bc4",
+                "background": "#ffffff",
+            },
+        )
 
     ], className="mr-theme", style={
         "backgroundColor": "#f3f6fb",
@@ -151,6 +161,7 @@ dcc.Tabs(
         "margin": 0,
     },
 )
+
 
 
 

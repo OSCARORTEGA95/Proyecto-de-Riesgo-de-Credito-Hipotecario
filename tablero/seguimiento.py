@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 import pandas as pd
@@ -110,7 +109,7 @@ def tarjeta_kpi(titulo, identificador, detalle):
     ]
 
     # Espacio para variaciones mensuales reales
-    if identificador in ("seg-activos", "seg-saldo", "seg-mora90"):
+    if identificador in ("seg-activos", "seg-saldo", "seg-al-dia", "seg-mora30", "seg-mora60", "seg-mora90"):
         contenido.append(
             html.Div(
                 id=f"{identificador}-variacion",
@@ -134,6 +133,35 @@ def tarjeta_kpi(titulo, identificador, detalle):
         }
     )
 
+
+
+def variacion_mensual(actual, anterior, mes_anterior, tipo="neutral"):
+    """Muestra cambios reales frente al mes calendario anterior, sin inventar bases."""
+    if anterior is None:
+        return html.Span("— Sin mes anterior comparable", style={"color": "#a9b8c9"})
+    if anterior == 0:
+        return html.Span("— Sin base para calcular variación", style={"color": "#a9b8c9"})
+
+    cambio = 100 * (actual - anterior) / anterior
+    if abs(cambio) < 0.0000001:
+        icono, color = "→", "#cbd5e1"
+    elif cambio > 0:
+        icono = "↑"
+        # Más mora = deterioro. El crecimiento de cartera es informativo, no una mejora de riesgo.
+        color = "#fb7185" if tipo == "mora" else "#60a5fa"
+    else:
+        icono = "↓"
+        color = "#34d399" if tipo == "mora" else "#fbbf24"
+
+    signo = "+" if cambio > 0 else ""
+    etiqueta = f"{icono} {signo}{numero(cambio, 2)} % vs. {etiqueta_mes(mes_anterior)}"
+    return html.Span(etiqueta, style={"color": color, "fontWeight": "700"})
+
+
+def periodo_anterior(mes):
+    """Mes calendario anterior: YYYYMM -> YYYYMM, también en enero."""
+    anio, numero_mes = divmod(int(mes), 100)
+    return (anio - 1) * 100 + 12 if numero_mes == 1 else anio * 100 + numero_mes - 1
 
 
 def tarjeta_grafica(titulo, subtitulo, identificador):
@@ -529,6 +557,12 @@ def registrar_callbacks_seguimiento(app, nombres_estados):
         Output("seg-mora30", "children"),
         Output("seg-mora60", "children"),
         Output("seg-mora90", "children"),
+        Output("seg-activos-variacion", "children"),
+        Output("seg-saldo-variacion", "children"),
+        Output("seg-al-dia-variacion", "children"),
+        Output("seg-mora30-variacion", "children"),
+        Output("seg-mora60-variacion", "children"),
+        Output("seg-mora90-variacion", "children"),
 
         Output("seg-grafico-activos", "figure"),
         Output("seg-grafico-mora", "figure"),
@@ -561,6 +595,7 @@ def registrar_callbacks_seguimiento(app, nombres_estados):
 
             return (
                 "0", "USD 0", "0", "0", "0", "0",
+                *([html.Span("— Sin comparación", style={"color": "#a9b8c9"})] * 6),
                 vacia, vacia, vacia,
                 [],
                 contexto,
@@ -591,6 +626,7 @@ def registrar_callbacks_seguimiento(app, nombres_estados):
 
             return (
                 "0", "USD 0", "0", "0", "0", "0",
+                *([html.Span("— Sin comparación", style={"color": "#a9b8c9"})] * 6),
                 vacia, vacia, vacia,
                 [],
                 contexto,
@@ -604,6 +640,20 @@ def registrar_callbacks_seguimiento(app, nombres_estados):
         mora30 = int(corte["mora_30"].sum())
         mora60 = int(corte["mora_60"].sum())
         mora90 = int(corte["mora_90"].sum())
+
+        # Comparar con el MES CALENDARIO INMEDIATAMENTE ANTERIOR.
+        # Se conservan exactamente los mismos filtros de trimestre y estado.
+        mes_previo = periodo_anterior(mes)
+        anterior = tabla[tabla["period"] == mes_previo]
+        hay_comparacion = (mes_previo in meses) and not anterior.empty and int(anterior["activos"].sum()) > 0
+
+        nombres_columnas = ("activos", "saldo", "al_dia", "mora_30", "mora_60", "mora_90")
+        actuales = (activos, saldo, al_dia, mora30, mora60, mora90)
+        comparaciones = []
+        for columna, valor_actual in zip(nombres_columnas, actuales):
+            valor_previo = float(anterior[columna].sum()) if hay_comparacion else None
+            clase = "mora" if columna in ("mora_30", "mora_60", "mora_90") else "neutral"
+            comparaciones.append(variacion_mensual(valor_actual, valor_previo, mes_previo, clase))
 
         # ----------------------------------
         # Evolución mensual
@@ -787,6 +837,7 @@ def registrar_callbacks_seguimiento(app, nombres_estados):
             numero(mora30),
             numero(mora60),
             numero(mora90),
+            *comparaciones,
             figura_activos,
             figura_mora,
             figura_estados,
