@@ -1,0 +1,151 @@
+/* Mortgage Risk Analytics — tema Tabler UI oscuro.
+   Un solo archivo sin estilos de prueba ni duplicaciones. */
+:root {
+  --mr-bg: #16191f;
+  --mr-panel: #242930;
+  --mr-panel-2: #2b323c;
+  --mr-border: #3d4652;
+  --mr-ink: #f5f7fb;
+  --mr-muted: #b4c1d1;
+  --mr-blue: #3d9bff;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-width: 320px; background: var(--mr-bg); color: var(--mr-ink); font-family: Inter, "Segoe UI", Arial, sans-serif; }
+.mr-theme, .mr-theme .mr-screen { background: var(--mr-bg) !important; color: var(--mr-ink) !important; min-height: 100vh; }
+.mr-theme > div:first-child { background: #1e242d !important; border-bottom: 1px solid var(--mr-border); }
+.mr-theme .tab { background: #212630 !important; border-color: var(--mr-border) !important; color: var(--mr-muted) !important; font-weight: 600; }
+.mr-theme .tab--selected { background: #2b323c !important; color: white !important; border-top: 3px solid var(--mr-blue) !important; }
+.mr-theme h1, .mr-theme h2, .mr-theme h3, .mr-theme h4 { color: var(--mr-ink) !important; letter-spacing: -.25px; }
+.mr-theme p, .mr-theme label { color: var(--mr-muted); }
+.mr-theme .mr-screen > div:first-child { background: var(--mr-panel) !important; border-color: var(--mr-border) !important; }
+.mr-theme .mr-kpi, .mr-theme .mr-chart-card, .mr-theme .mr-panel,
+.mr-theme .mr-filtros { background: var(--mr-panel) !important; border: 1px solid var(--mr-border) !important; border-radius: 12px !important; box-shadow: 0 4px 18px rgba(0,0,0,.14) !important; color: var(--mr-ink); min-width: 0; }
+.mr-theme .mr-kpi { padding: 20px !important; border-top: 1px solid var(--mr-border) !important; }
+.mr-theme .mr-kpi::after { display: none !important; }
+.mr-theme .mr-kpi h2 { color: #fff !important; font-size: clamp(21px,1.65vw,29px) !important; margin: 10px 0 !important; overflow-wrap: anywhere; }
+.mr-theme .mr-kpi p, .mr-theme .mr-kpi > div { color: var(--mr-muted) !important; }
+.mr-theme .mr-kpi:hover { box-shadow: 0 8px 22px rgba(0,0,0,.24) !important; transform: translateY(-2px); }
+.mr-theme .mr-chart-card { padding: 20px !important; }
+.mr-theme .mr-chart-card h4, .mr-theme .mr-panel h4 { color: #fff !important; }
+.mr-theme .mr-chart-card p, .mr-theme .mr-panel p { color: var(--mr-muted) !important; }
+/* Plotly's own backgrounds are set in Python; do not paint over charts with CSS. */
+.mr-theme .js-plotly-plot, .mr-theme .plot-container { background: var(--mr-panel) !important; }
+/* New Dash 3+ dropdown components (observed in browser inspector). */
+.mr-theme .dash-dropdown, .mr-theme .dash-dropdown * { --Dash-Fill-Interactive-Weak: #303947; }
+.mr-theme .dash-dropdown button, .mr-theme .dash-dropdown input,
+.mr-theme .dash-dropdown .dash-dropdown-value,
+.mr-theme .dash-dropdown .dash-dropdown-placeholder,
+.mr-theme .dash-dropdown .dash-dropdown-trigger,
+.mr-theme .dash-dropdown .dash-dropdown-grid-container { color: #17263a !important; }
+.mr-theme .dash-dropdown, .mr-theme .dash-dropdown button { background: #fff !important; }
+/* Legacy react-select where present. */
+.mr-theme .Select-control, .mr-theme .Select-menu-outer { background: #fff !important; }
+.mr-theme .Select-value-label, .mr-theme .Select-placeholder, .mr-theme .Select-option,
+.mr-theme .VirtualizedSelectOption { color: #17263a !important; }
+/* Fields in Evaluación and Seguimiento. */
+.mr-theme .mr-evaluacion input, .mr-theme .mr-seguimiento input { background-color: #303945 !important; color: #fff !important; border: 1px solid #566377 !important; }
+.mr-theme input:focus { outline-color: var(--mr-blue); }
+.mr-theme .mr-evaluacion label, .mr-theme .mr-seguimiento label { color: var(--mr-muted) !important; }
+.mr-theme .mr-evaluacion .mr-panel button { border: 1px solid #536174; }
+.mr-theme button { border-radius: 8px; transition: filter .15s ease, transform .15s ease; }
+.mr-theme button:hover { filter: brightness(1.1); }
+.mr-theme .mr-panel hr { border-color: var(--mr-border); }
+/* Styles for Dash DataTable. */
+.mr-theme .dash-table-container, .mr-theme .dash-spreadsheet-container { color: #e5edf7 !important; }
+.mr-theme .dash-spreadsheet-container td, .mr-theme .dash-spreadsheet-container th { border-color: #435062 !important; }
+.mr-theme .mr-panel table:not(.dash-spreadsheet) { width: 100%; color: #e8eef7; }
+.mr-theme .mr-panel table:not(.dash-spreadsheet) td,
+.mr-theme .mr-panel table:not(.dash-spreadsheet) th { padding: 9px; border-bottom: 1px solid #3e4752; }
+/* Prevent screen-wide horizontal overflow. */
+.mr-theme, .mr-theme .mr-screen { max-width: 100%; overflow-x: clip; }
+@media (max-width: 950px) {
+ .mr-theme .mr-kpi, .mr-theme .mr-chart-card, .mr-theme .mr-panel { padding: 16px !important; }
+ .mr-theme .mr-evaluacion .mr-panel { min-width: 0; }
+}
+
+
+/* CAMPOS NUMÉRICOS DE EVALUACIÓN */
+
+input[type="number"] {
+    width: 100%;
+    background-color: #ffffff !important;
+    color: #182433 !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 7px !important;
+    padding: 11px 14px !important;
+    font-size: 14px !important;
+    font-weight: 600;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+/* Quitar controles + y - del navegador */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"]:focus {
+    outline: none !important;
+    border-color: #206bc4 !important;
+    box-shadow: 0 0 0 3px rgba(32, 107, 196, 0.15) !important;
+}
+
+/* Campos numéricos de Evaluación */
+.mr-input-numerico {
+    background: #ffffff !important;
+    color: #182433 !important;
+    border: 1px solid #64748b !important;
+    border-radius: 7px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+.mr-input-numerico:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+}
+
+
+/* LEGIBILIDAD GENERAL */
+
+.mr-theme {
+    font-size: 15px;
+}
+
+.mr-theme h2 {
+    font-size: 26px !important;
+    font-weight: 700 !important;
+}
+
+.mr-theme h4 {
+    font-size: 17px !important;
+    font-weight: 700 !important;
+}
+
+.mr-theme label,
+.mr-theme p,
+.mr-theme td,
+.mr-theme th {
+    font-size: 14px !important;
+}
+
+/* CAMPOS DEL FORMULARIO */
+
+.mr-theme .mr-input-numerico {
+    width: 100%;
+    min-height: 42px;
+    background-color: #ffffff !important;
+    color: #182433 !important;
+    padding: 10px 14px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+.mr-theme button {
+    font-size: 14px !important;
+}

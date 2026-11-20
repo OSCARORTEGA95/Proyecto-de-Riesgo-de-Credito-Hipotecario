@@ -3,6 +3,8 @@ from pathlib import Path
 
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.io as pio
+pio.templates.default = "plotly_dark"
 from dash import Input, Output, dcc, html
 
 
@@ -174,29 +176,45 @@ def selector(titulo, identificador, opciones, valor):
     ], style={"minWidth": 0})
 
 
+
 def tarjeta_kpi(titulo, identificador, detalle):
     return html.Div([
-        html.P(titulo, style={
-            "fontSize": "13px",
-            "color": "#64748b",
-            "margin": 0
-        }),
-        html.H2(id=identificador, style={
-            "fontSize": "25px",
-            "color": "#17324d",
-            "margin": "12px 0"
-        }),
-        html.P(detalle, style={
-            "fontSize": "12px",
-            "color": "#94a3b8",
-            "margin": 0
-        })
-    ], style={
-        "backgroundColor": "white",
-        "padding": "18px",
-        "border": "1px solid #dce3eb",
-        "borderRadius": "10px"
+        html.Div(
+            titulo,
+            style={
+                "fontSize": "13px",
+                "fontWeight": "600",
+                "color": "#64748b",
+                "marginBottom": "12px"
+            }
+        ),
+        html.H2(
+            id=identificador,
+            style={
+                "fontSize": "28px",
+                "fontWeight": "750",
+                "color": "#122f49",
+                "margin": "0 0 12px 0",
+                "letterSpacing": "-0.5px"
+            }
+        ),
+        html.Div(
+            detalle,
+            style={
+                "fontSize": "12px",
+                "color": "#64748b"
+            }
+        )
+        ], className="mr-kpi", style={
+        "backgroundColor": "#ffffff",
+        "padding": "22px",
+        "border": "1px solid #e2e8f0",
+        "borderTop": "4px solid #3478b7",
+        "borderRadius": "12px",
+        "boxShadow": "0 4px 14px rgba(15, 23, 42, 0.07)",
+        "minWidth": 0
     })
+
 
 
 def tarjeta_grafica(titulo, subtitulo, identificador, nota=None):
@@ -224,13 +242,16 @@ def tarjeta_grafica(titulo, subtitulo, identificador, nota=None):
             })
         )
 
-    return html.Div(contenido, style={
-        "backgroundColor": "white",
-        "padding": "15px",
-        "border": "1px solid #dce3eb",
-        "borderRadius": "10px",
+    
+    return html.Div(contenido, className="mr-chart-card", style={
+        "backgroundColor": "#ffffff",
+        "padding": "20px",
+        "border": "1px solid #e2e8f0",
+        "borderRadius": "12px",
+        "boxShadow": "0 4px 14px rgba(15, 23, 42, 0.06)",
         "minWidth": 0
     })
+
 
 
 def figura_vacia(mensaje="Sin datos para los filtros seleccionados"):
@@ -248,7 +269,7 @@ def figura_vacia(mensaje="Sin datos para los filtros seleccionados"):
     figura.update_layout(
         height=360,
         margin=dict(l=20, r=20, t=20, b=20),
-        paper_bgcolor="white"
+        paper_bgcolor="#242930"
     )
 
     return figura
@@ -278,8 +299,8 @@ def grafica_barras(tabla, columna, orden):
     figura.update_layout(
         height=350,
         margin=dict(l=45, r=15, t=35, b=60),
-        paper_bgcolor="white",
-        plot_bgcolor="white",
+        paper_bgcolor="#242930",
+        plot_bgcolor="#242930",
         font=dict(size=11),
         showlegend=False,
         xaxis=dict(tickangle=-25),
@@ -503,7 +524,7 @@ def crear_panorama():
         graficas_historicas
     ], style={"padding": "24px"})
 
-    return html.Div([filtros, contenido])
+    return html.Div([filtros, contenido], className="mr-screen")
 
 
 # ==========================================
@@ -598,7 +619,7 @@ def registrar_callbacks_panorama(app):
         figura_proposito.update_layout(
             height=350,
             margin=dict(l=10, r=10, t=20, b=10),
-            paper_bgcolor="white",
+            paper_bgcolor="#242930",
             font=dict(size=11),
             annotations=[
                 dict(
@@ -646,8 +667,8 @@ def registrar_callbacks_panorama(app):
         figura_estados.update_layout(
             height=420,
             margin=dict(l=140, r=90, t=15, b=35),
-            paper_bgcolor="white",
-            plot_bgcolor="white",
+            paper_bgcolor="#242930",
+            plot_bgcolor="#242930",
             xaxis=dict(
                 gridcolor="#edf1f5",
                 rangemode="tozero"
@@ -708,8 +729,8 @@ def registrar_callbacks_panorama(app):
             figura_cohortes.update_layout(
                 height=420,
                 margin=dict(l=55, r=15, t=20, b=60),
-                paper_bgcolor="white",
-                plot_bgcolor="white",
+                paper_bgcolor="#242930",
+                plot_bgcolor="#242930",
                 xaxis=dict(
                     title="Trimestre de originación",
                     tickangle=-45,

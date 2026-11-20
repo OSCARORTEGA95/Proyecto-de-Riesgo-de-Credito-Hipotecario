@@ -1,5 +1,6 @@
 
 from dash import Dash, dcc, html
+from pathlib import Path
 
 # Importar las tres pantallas
 from panorama import (
@@ -27,63 +28,130 @@ from prediccion import registrar_callbacks_prediccion
 # 1. APLICACION PRINCIPAL
 # ==========================================
 
-app = Dash(__name__)
+app = Dash(
+    __name__,
+    assets_folder=str(Path(__file__).resolve().parent / "assets"),
+    external_stylesheets=[
+        "https://cdn.jsdelivr.net/npm/@tabler/core@1.7.0/dist/css/tabler.min.css"
+    ]
+)
 app.title = "Mortgage Risk Analytics"
 
 # Servidor para despliegue posterior
 server = app.server
 
 
+
 # ==========================================
 # 2. NAVEGACION DEL TABLERO
 # ==========================================
 
-app.layout = html.Div([
+estilo_menu = {
+    "padding": "18px 22px",
+    "textAlign": "left",
+    "fontSize": "14px",
+    "fontWeight": "500",
+    "color": "#52677f",
+    "backgroundColor": "#ffffff",
+    "border": "none",
+    "borderLeft": "4px solid transparent",
+}
 
-    html.Div(
-        "MR  |  Mortgage Risk Analytics",
-        style={
-            "backgroundColor": "#122f49",
-            "color": "white",
-            "padding": "20px",
-            "fontSize": "20px",
-            "fontWeight": "bold"
-        }
-    ),
+estilo_menu_activo = {
+    **estilo_menu,
+    "backgroundColor": "#eaf2fc",
+    "color": "#206bc4",
+    "fontWeight": "700",
+    "borderLeft": "4px solid #206bc4",
+}
 
-    dcc.Tabs([
-
-        # Modulo 1: Panorama
-        dcc.Tab(
-            label="Panorama",
-            children=crear_panorama()
+app.layout = html.Div(
+    [
+        # Encabezado principal
+        html.Div(
+            [
+                html.Div(
+                    "MR",
+                    style={
+                        "backgroundColor": "#ffffff",
+                        "color": "#17324d",
+                        "padding": "10px 13px",
+                        "borderRadius": "10px",
+                        "fontSize": "18px",
+                        "fontWeight": "700",
+                    },
+                ),
+                html.Div(
+                    [
+                        html.Div(
+                            "Mortgage Risk Analytics",
+                            style={
+                                "fontSize": "22px",
+                                "fontWeight": "700",
+                            },
+                        ),
+                        html.Div(
+                            "Plataforma de análisis de riesgo hipotecario",
+                            style={
+                                "fontSize": "12px",
+                                "color": "#cbd5e1",
+                            },
+                        ),
+                    ]
+                ),
+            ],
+            style={
+                "backgroundColor": "#122f49",
+                "color": "#ffffff",
+                "padding": "18px 28px",
+                "display": "flex",
+                "alignItems": "center",
+                "gap": "16px",
+            },
         ),
 
-        # Modulo 2: Evaluacion
+        # Navegación lateral
+        
+dcc.Tabs(
+    [
+        dcc.Tab(
+            label="Panorama",
+            children=crear_panorama(),
+        ),
         dcc.Tab(
             label="Evaluación",
             children=crear_evaluacion(
                 estados,
                 nombres_estados
-            )
+            ),
         ),
-
-        # Modulo 3: Seguimiento
         dcc.Tab(
             label="Seguimiento",
             children=crear_seguimiento(
                 nombres_estados
-            )
-        )
+            ),
+        ),
+    ],
+    vertical=False,
+    style={
+        "width": "100%",
+        "backgroundColor": "#ffffff",
+    },
+    colors={
+        "border": "#e3e9f2",
+        "primary": "#206bc4",
+        "background": "#ffffff",
+    },
+)
 
-    ])
+    ], className="mr-theme", style={
+        "backgroundColor": "#f3f6fb",
+        "minHeight": "100vh",
+        "fontFamily": "Segoe UI, Arial, sans-serif",
+        "margin": 0,
+    },
+)
 
-], style={
-    "backgroundColor": "#f2f5fa",
-    "minHeight": "100vh",
-    "fontFamily": "Arial, sans-serif",
-    "margin": 0
-})
 
 
 # ==========================================

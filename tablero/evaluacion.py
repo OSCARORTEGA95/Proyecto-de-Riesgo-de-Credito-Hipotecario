@@ -7,23 +7,23 @@ from dash import html, dcc, Input, Output, ctx
 # ==========================================
 
 TARJETA = {
-    "backgroundColor": "white",
+    "backgroundColor": "#242930",
     "padding": "22px",
-    "border": "1px solid #dce3eb",
-    "borderRadius": "10px"
+    "border": "1px solid #3b4450",
+    "borderRadius": "12px"
 }
 
 CAMPO = {
     "width": "100%",
     "padding": "11px",
-    "border": "1px solid #ccd6e0",
-    "borderRadius": "6px",
+    "border": "1px solid #4b5563",
+    "borderRadius": "7px",
     "boxSizing": "border-box",
     "fontSize": "14px"
 }
 
 TEXTO_SECUNDARIO = {
-    "color": "#64748b",
+    "color": "#aeb9c8",
     "fontSize": "13px"
 }
 
@@ -76,12 +76,11 @@ def formatear_diferencia(valor, unidad, decimales):
 
 def campo_numerico(titulo, identificador, minimo, maximo, paso=1):
     return html.Div([
-
         html.Label(titulo, style={
-            "fontSize": "13px",
-            "color": "#64748b",
+            "fontSize": "14px",
+            "color": "#cbd5e1",
             "display": "block",
-            "marginBottom": "6px"
+            "marginBottom": "8px"
         }),
 
         dcc.Input(
@@ -90,11 +89,10 @@ def campo_numerico(titulo, identificador, minimo, maximo, paso=1):
             min=minimo,
             max=maximo,
             step=paso,
+            className="mr-input-numerico",
             style=CAMPO
         )
-
     ])
-
 
 def campo_lista(titulo, identificador, opciones):
     return html.Div([
@@ -286,7 +284,7 @@ def crear_evaluacion(estados, nombres_estados):
             }
         )
 
-    ], style=TARJETA)
+    ], className="mr-panel", style=TARJETA)
 
     # Resultado predictivo pendiente de integración
 
@@ -339,7 +337,7 @@ def crear_evaluacion(estados, nombres_estados):
             }
         )
 
-    ], style=TARJETA)
+    ], className="mr-panel", style=TARJETA)
 
     # Comparación descriptiva
 
@@ -366,7 +364,7 @@ def crear_evaluacion(estados, nombres_estados):
             }
         )
 
-    ], style=TARJETA)
+    ], className="mr-panel", style=TARJETA)
 
     # Diseño general
 
@@ -403,7 +401,7 @@ def crear_evaluacion(estados, nombres_estados):
             "marginTop": "20px"
         })
 
-    ], style={
+    ], className="mr-screen mr-evaluacion", style={
         "padding": "24px",
         "backgroundColor": "#f2f5fa",
         "minHeight": "100vh"

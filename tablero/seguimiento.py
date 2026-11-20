@@ -3,6 +3,8 @@ from pathlib import Path
 
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.io as pio
+pio.templates.default = "plotly_dark"
 
 from dash import html, dcc, dash_table, Input, Output
 from dash.dash_table.Format import Format, Group
@@ -82,33 +84,56 @@ def selector(titulo, identificador, opciones, valor):
     ], style={"minWidth": 0})
 
 
-def tarjeta_kpi(titulo, identificador, detalle):
-    return html.Div([
 
+def tarjeta_kpi(titulo, identificador, detalle):
+
+    contenido = [
         html.P(titulo, style={
-            "fontSize": "13px",
-            "color": "#64748b",
+            "fontSize": "14px",
+            "fontWeight": "600",
+            "color": "#b8c5d6",
             "margin": 0
         }),
 
         html.H2(id=identificador, style={
-            "fontSize": "24px",
-            "color": "#17324d",
+            "fontSize": "28px",
+            "fontWeight": "700",
+            "color": "#ffffff",
             "margin": "12px 0"
         }),
 
         html.P(detalle, style={
-            "fontSize": "11px",
+            "fontSize": "12px",
             "color": "#94a3b8",
             "margin": 0
         })
+    ]
 
-    ], style={
-        "backgroundColor": "white",
-        "padding": "18px",
-        "border": "1px solid #dce3eb",
-        "borderRadius": "10px"
-    })
+    # Espacio para variaciones mensuales reales
+    if identificador in ("seg-activos", "seg-saldo", "seg-mora90"):
+        contenido.append(
+            html.Div(
+                id=f"{identificador}-variacion",
+                style={
+                    "fontSize": "13px",
+                    "fontWeight": "600",
+                    "marginTop": "12px",
+                    "minHeight": "20px"
+                }
+            )
+        )
+
+    return html.Div(
+        contenido,
+        className="mr-kpi",
+        style={
+            "backgroundColor": "#242930",
+            "padding": "20px",
+            "border": "1px solid #3a424d",
+            "borderRadius": "10px"
+        }
+    )
+
 
 
 def tarjeta_grafica(titulo, subtitulo, identificador):
@@ -130,7 +155,7 @@ def tarjeta_grafica(titulo, subtitulo, identificador):
             config={"displayModeBar": False}
         )
 
-    ], style={
+    ], className="mr-chart-card", style={
         "backgroundColor": "white",
         "padding": "16px",
         "border": "1px solid #dce3eb",
@@ -153,8 +178,8 @@ def figura_vacia(mensaje):
 
     figura.update_layout(
         height=350,
-        paper_bgcolor="white",
-        plot_bgcolor="white",
+        paper_bgcolor="#242930",
+        plot_bgcolor="#242930",
         margin=dict(l=30, r=30, t=30, b=30),
         xaxis=dict(visible=False),
         yaxis=dict(visible=False)
@@ -239,7 +264,7 @@ def crear_seguimiento(nombres_estados):
             }
         )
 
-    ], style={
+    ], className="mr-filtros", style={
         "display": "grid",
         "gridTemplateColumns": (
             "repeat(auto-fit, minmax(170px, 1fr))"
@@ -380,16 +405,19 @@ def crear_seguimiento(nombres_estados):
                 "padding": "11px",
                 "fontFamily": "Arial",
                 "fontSize": "12px",
-                "textAlign": "left"
+                "textAlign": "left",
+                "color": "#e5edf7",
+                "backgroundColor": "#242930"
             },
 
             style_header={
-                "backgroundColor": "#edf2f7",
+                "backgroundColor": "#303945",
+                "color": "#ffffff",
                 "fontWeight": "bold"
             }
         )
 
-    ], style={
+    ], className="mr-panel", style={
         "backgroundColor": "white",
         "padding": "18px",
         "border": "1px solid #dce3eb",
@@ -417,7 +445,7 @@ def crear_seguimiento(nombres_estados):
             }
         )
 
-    ], style={
+    ], className="mr-panel", style={
         "backgroundColor": "white",
         "padding": "20px",
         "border": "1px solid #dce3eb",
@@ -481,7 +509,7 @@ def crear_seguimiento(nombres_estados):
 
         alertas
 
-    ], style={
+    ], className="mr-screen mr-seguimiento", style={
         "padding": "24px",
         "backgroundColor": "#f2f5fa",
         "minHeight": "100vh"
@@ -622,8 +650,8 @@ def registrar_callbacks_seguimiento(app, nombres_estados):
 
         figura_activos.update_layout(
             height=350,
-            paper_bgcolor="white",
-            plot_bgcolor="white",
+            paper_bgcolor="#242930",
+            plot_bgcolor="#242930",
             margin=dict(l=75, r=20, t=15, b=50),
             xaxis=dict(nticks=9),
             yaxis=dict(
@@ -653,8 +681,8 @@ def registrar_callbacks_seguimiento(app, nombres_estados):
 
         figura_mora.update_layout(
             height=350,
-            paper_bgcolor="white",
-            plot_bgcolor="white",
+            paper_bgcolor="#242930",
+            plot_bgcolor="#242930",
             margin=dict(l=65, r=20, t=15, b=50),
             xaxis=dict(nticks=9),
             yaxis=dict(
@@ -721,8 +749,8 @@ def registrar_callbacks_seguimiento(app, nombres_estados):
 
             figura_estados.update_layout(
                 height=400,
-                paper_bgcolor="white",
-                plot_bgcolor="white",
+                paper_bgcolor="#242930",
+                plot_bgcolor="#242930",
                 margin=dict(l=150, r=85, t=15, b=35),
                 xaxis=dict(
                     gridcolor="#edf1f5",
