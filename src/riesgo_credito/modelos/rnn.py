@@ -45,7 +45,34 @@ MES_BANDERAS = base.P2_BANDERAS
 ESTATICAS = {"solo_mes": ([], base.P2_CAT), "completa": (base.P1_NUM, base.P2_CAT + base.P1_CAT)}
 
 
+class DatasetLigero:
+    """ds.dataset que lee de a un archivo y pocos lotes por adelantado.
+
+    Por defecto pyarrow lee hasta 4 archivos y 16 lotes adelante; con los archivos de ~1 GB
+    por trimestre de la pregunta 2 eso agota los 4 GB de la t3.medium. Aquí se limita la
+    lectura anticipada: es algo más lenta, pero la memoria queda acotada.
+    """
+    LECTURA = dict(batch_size=65536, batch_readahead=2, fragment_readahead=1)
+
+    def __init__(self, ruta):
+        self.d = ds.dataset(base.RAIZ / ruta, format="parquet", partitioning="hive")
+
+    def to_table(self, columns=None, filter=None):
+        return self.d.scanner(columns=columns, filter=filter, **self.LECTURA).to_table()
+
+    def count_rows(self, filter=None):
+        return self.d.scanner(columns=[], filter=filter, **self.LECTURA).count_rows()
+
+    def to_batches(self, columns=None, filter=None, batch_size=65536):
+        return self.d.to_batches(columns=columns, filter=filter, batch_size=batch_size,
+                                 batch_readahead=2, fragment_readahead=1)
+
+    def __getattr__(self, nombre):
+        return getattr(self.d, nombre)
+
+
 def cargar_config():
+    base.dataset = DatasetLigero  # también lo usan knn.datos y red.datos_muestra
     cfg = copy.deepcopy(base.cargar_config())
     with open(CONFIG, encoding="utf-8") as f:
         propia = yaml.safe_load(f)
