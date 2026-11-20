@@ -1,0 +1,7 @@
+# Contexto de la imagen del tablero (docker build -f tablero/Dockerfile .):
+# solo entran el tablero y las dos tablas que lee; el resto de data/ pesa decenas de GB
+*
+!tablero/
+!data/tablero/originacion/
+!data/tablero/serie_mensual/
+tablero/__pycache__/

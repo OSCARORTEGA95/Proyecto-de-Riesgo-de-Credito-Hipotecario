@@ -1,0 +1,5 @@
+-r requirements.txt
+
+# Solo para entrenar: lectura del Parquet de DVC y registro opcional en MLflow
+pyarrow>=15.0
+mlflow>=2.10

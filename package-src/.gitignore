@@ -1,0 +1,7 @@
+build/
+dist/
+*.egg-info/
+.tox/
+# el modelo se entrena en el EC2 con los datos de DVC (no redistribuibles) y viaja en el .whl
+modelo_riesgo/trained_models/*.pkl
+modelo_riesgo/trained_models/metricas.json

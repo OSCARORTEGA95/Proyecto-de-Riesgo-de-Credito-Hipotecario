@@ -1,0 +1,34 @@
+# Red neuronal densa (perceptrón multicapa) de la pregunta 1.
+# La partición temporal, la semilla y el tamaño de los lotes de predicción se toman de
+# config/modelos_knn.yaml, para comparar con los mismos datos y la misma prueba que
+# k vecinos, regresión logística, naive Bayes y el árbol de decisión.
+#
+# Cada versión se entrena dos veces:
+#   1. con las cosechas de selección, midiendo en validación el área bajo la curva en cada
+#      época; se detiene tras "paciencia" épocas sin mejora y se queda con la mejor época;
+#   2. con todas las cosechas de entrenamiento, durante ese número de épocas, para la prueba.
+
+max_entrenamiento: 300000   # igual que los demás: todos los positivos y 10 negativos por positivo
+
+mlflow:
+  p1: red-p1
+
+entrenamiento:
+  epocas_max: 60
+  paciencia: 8
+  tam_lote: 512
+  tasa_aprendizaje: 0.001
+  l2: 0.00001
+
+# variables: conjuntos de riesgo_credito.modelos.knn.CONJUNTOS (base = las 16 de la solicitud sin estado)
+# capas: neuronas de cada capa oculta (ReLU); la salida es una neurona sigmoide
+versiones:
+  p1:
+    v1: {descripcion: 2_capas, variables: base, proporcion: 10, capas: [64, 32], dropout: 0.0}
+    v2: {descripcion: 4_capas, variables: base, proporcion: 10, capas: [128, 64, 32, 16], dropout: 0.0}
+    v3: {descripcion: 6_capas, variables: base, proporcion: 10, capas: [128, 128, 64, 64, 32, 16], dropout: 0.0}
+    v4: {descripcion: 7_capas, variables: base, proporcion: 10, capas: [128, 128, 64, 64, 32, 32, 16], dropout: 0.0}
+    v5: {descripcion: 2_capas_dropout, variables: base, proporcion: 10, capas: [64, 32], dropout: 0.3}
+    v6: {descripcion: 4_capas_dropout, variables: base, proporcion: 10, capas: [128, 64, 32, 16], dropout: 0.3}
+    v7: {descripcion: 6_capas_dropout, variables: base, proporcion: 10, capas: [128, 128, 64, 64, 32, 16], dropout: 0.3}
+    v8: {descripcion: 7_capas_dropout, variables: base, proporcion: 10, capas: [128, 128, 64, 64, 32, 32, 16], dropout: 0.3}

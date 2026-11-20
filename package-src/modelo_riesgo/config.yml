@@ -1,0 +1,39 @@
+# Configuración del paquete del modelo de la pregunta 1 (red neuronal).
+# Antes de entrenar con "tox run -e train", revisa en MLflow (experimento red-p1) cuál
+# arquitectura ganó y copia aquí sus capas y su dropout. Si cambias algo, sube VERSION.
+
+package_name: modelo_riesgo
+pipeline_save_file: modelo_red_p1_v
+
+# Datos: tabla de la pregunta 1 que produce el ETL y se descarga con DVC.
+# La ruta es relativa a la carpeta package-src (la raíz del repositorio queda un nivel arriba).
+ruta_datos: ../data/modelado/p1
+etiqueta: y_p1
+
+# Partición temporal, la misma de los demás modelos (config/modelos_knn.yaml)
+seleccion: [2022Q1, 2022Q2, 2022Q3, 2022Q4, 2023Q1, 2023Q2]
+validacion: [2023Q3, 2023Q4]
+entrenamiento: [2022Q1, 2022Q2, 2022Q3, 2022Q4, 2023Q1, 2023Q2, 2023Q3, 2023Q4]
+prueba: [2024Q1, 2024Q2, 2024Q3, 2024Q4]
+max_validacion: 200000
+proporcion_negativos: 10       # todos los positivos y 10 negativos por positivo
+semilla: 42
+
+# Variables que usa el modelo: los nueve campos del formulario del tablero.
+# La API acepta las 17 variables de la solicitud; las que no estén aquí se ignoran.
+# Si quitas una variable de estas listas, el modelo deja de pedirla (Taller 5, parte 4).
+variables_numericas: [credit_score, dti, oltv, orig_upb, orig_rate, orig_term]
+variables_categoricas: [purpose, prop_type, state]
+
+# Arquitectura de la red: copiar la mejor ejecución del experimento red-p1
+red:
+  capas: [128, 64, 32, 16]
+  dropout: 0.3
+  epocas_max: 60
+  paciencia: 8
+  tam_lote: 512
+  tasa_aprendizaje: 0.001
+  l2: 0.00001
+
+# Si MLFLOW_TRACKING_URI está definida y mlflow instalado, el entrenamiento se registra aquí
+experimento_mlflow: red-p1
