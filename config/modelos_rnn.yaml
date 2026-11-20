@@ -1,0 +1,48 @@
+# Redes recurrentes (GRU) de las preguntas 1 y 2.
+# La partición temporal, la semilla, los grupos de muestra de la pregunta 2 y el tamaño de los
+# lotes se toman de config/modelos_knn.yaml, para comparar con los mismos datos y la misma
+# prueba que k vecinos y la red densa.
+#
+# Como en la red densa, cada versión se entrena dos veces: con las cosechas de selección,
+# midiendo el área bajo la curva en validación en cada época para elegir el número de
+# épocas, y con todas las de entrenamiento durante ese número de épocas.
+#
+# Pregunta 2: la red lee los últimos 12 meses de comportamiento de cada crédito (un paso
+#   por mes) y predice si incumple en los 3 meses siguientes. Es el uso natural de una red
+#   recurrente. Se compara con k vecinos (experimento knn-p2).
+# Pregunta 1: la solicitud no tiene historia; la red lee las columnas de la solicitud una a
+#   una como si fueran una secuencia. Sirve solo para comparar con la red densa (red-p1).
+
+mlflow:
+  p1: rnn-p1
+  p2: rnn-p2
+
+max_entrenamiento:
+  p1: 300000
+  p2: 100000
+max_validacion:      # límite de créditos para medir la validación en cada época
+  p1: 50000
+  p2: 200000
+n_meses: 12          # pasos de la secuencia de la pregunta 2 (meses de historia, incluido el actual)
+lote_construccion: 100000   # filas de la pregunta 2 que se arman a la vez al predecir la prueba
+
+entrenamiento:
+  epocas_max: 40
+  paciencia: 6
+  tam_lote: 256
+  tasa_aprendizaje: 0.002
+  l2: 0.00001
+  recorte: 5.0
+
+# p1 · variables: conjunto de riesgo_credito.modelos.knn.CONJUNTOS
+# p2 · estaticas: solo_mes = solo el plan de asistencia del mes actual;
+#                 completa = además las variables de la solicitud (como knn p2 v1)
+versiones:
+  p1:
+    v1: {descripcion: gru_32, variables: base, proporcion: 10, unidades: 32, densas: [32], dropout: 0.0}
+    v2: {descripcion: gru_32_dropout, variables: base, proporcion: 10, unidades: 32, densas: [32], dropout: 0.3}
+  p2:
+    v1: {descripcion: gru_32_solo_mes, estaticas: solo_mes, proporcion: 10, unidades: 32, densas: [32], dropout: 0.0}
+    v2: {descripcion: gru_32_completa, estaticas: completa, proporcion: 10, unidades: 32, densas: [32], dropout: 0.0}
+    v3: {descripcion: gru_32_completa_dropout, estaticas: completa, proporcion: 10, unidades: 32, densas: [32], dropout: 0.3}
+    v4: {descripcion: gru_64_completa_dropout, estaticas: completa, proporcion: 10, unidades: 64, densas: [64, 32], dropout: 0.3}
