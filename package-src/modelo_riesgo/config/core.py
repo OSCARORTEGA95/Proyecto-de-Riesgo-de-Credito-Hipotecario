@@ -22,6 +22,19 @@ class ConfigRed(BaseModel):
     l2: float
 
 
+class ConfigP2(BaseModel):
+    modelo_origen: str
+    archivo: str
+    descripcion: str
+    variables_numericas: List[str]
+    variables_banderas: List[str]
+    variables_categoricas: List[str]
+
+    @property
+    def variables(self) -> List[str]:
+        return self.variables_numericas + self.variables_banderas + self.variables_categoricas
+
+
 class Config(BaseModel):
     package_name: str
     pipeline_save_file: str
@@ -38,6 +51,7 @@ class Config(BaseModel):
     variables_categoricas: List[str]
     red: ConfigRed
     experimento_mlflow: str
+    p2: ConfigP2
 
     @property
     def variables(self) -> List[str]:

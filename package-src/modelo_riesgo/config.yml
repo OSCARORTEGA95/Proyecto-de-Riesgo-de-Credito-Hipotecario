@@ -1,4 +1,4 @@
-# Configuración del paquete del modelo de la pregunta 1 (red neuronal).
+# Configuración del paquete: modelo de la pregunta 1 (red neuronal) y de la pregunta 2 (k vecinos).
 # Antes de entrenar con "tox run -e train", revisa en MLflow (experimento red-p1) cuál
 # arquitectura ganó y copia aquí sus capas y su dropout. Si cambias algo, sube VERSION.
 
@@ -37,3 +37,20 @@ red:
 
 # Si MLFLOW_TRACKING_URI está definida y mlflow instalado, el entrenamiento se registra aquí
 experimento_mlflow: red-p1
+
+# Pregunta 2: ¿qué créditos activos y al día llegarán a 90 días de mora en los próximos 3 meses?
+# Modelo ganador en validación del experimento knn-p2 (versión 1, AUC de validación 0,875).
+# No se reentrena aquí: "tox run -e p2" copia el pipeline que exportó src/riesgo_credito/modelos/knn.py
+# (carpeta modelos/knn/p2/v1, versionada en Git) con su corrección r y sus métricas.
+# Si la red recurrente (rnn-p2) supera 0,875 en validación, se cambia el origen y la descripción.
+p2:
+  modelo_origen: ../modelos/knn/p2/v1
+  archivo: modelo_knn_p2.joblib
+  descripcion: k vecinos más cercanos, versión 1 (experimento knn-p2)
+  variables_numericas: [edad, pct_saldo, dif_tasa, eltv, atrasos_12m, max_atraso_12m, meses_desde_atraso,
+                        indulgencia_12m, credit_score, dti, oltv, ocltv, orig_rate, orig_upb, orig_term, mi_pct,
+                        num_borrowers, num_units]
+  variables_banderas: [con_atraso_previo, diferimiento, diferimiento_mes, saldo_sin_interes, mora_desastre,
+                       modificado]
+  variables_categoricas: [plan_asistencia, purpose, occupancy, channel, first_time_homebuyer, prop_type,
+                          valuation_method]

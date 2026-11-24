@@ -8,6 +8,8 @@ pio.templates.default = "plotly_dark"
 from dash import html, dcc, dash_table, Input, Output
 from dash.dash_table.Format import Format, Group
 
+from alertas_p2 import crear_alertas, registrar_callbacks_alertas
+
 
 # ==========================================
 # 1. DATOS DE SEGUIMIENTO
@@ -453,33 +455,7 @@ def crear_seguimiento(nombres_estados):
         "marginTop": "14px"
     })
 
-    alertas = html.Div([
-
-        html.H4("Alertas tempranas de riesgo"),
-
-        html.P(
-            "Objetivo: identificar créditos activos y al día "
-            "con probabilidad de alcanzar 90 o más días "
-            "de mora durante los próximos tres meses."
-        ),
-
-        html.P(
-            "Pendiente de integrar el modelo predictivo "
-            "y la API del equipo. Los indicadores presentados "
-            "en esta pantalla son históricos y observados.",
-            style={
-                "fontSize": "13px",
-                "color": "#64748b"
-            }
-        )
-
-    ], className="mr-panel", style={
-        "backgroundColor": "white",
-        "padding": "20px",
-        "border": "1px solid #dce3eb",
-        "borderRadius": "10px",
-        "marginTop": "14px"
-    })
+    alertas = crear_alertas()
 
     return html.Div([
 
@@ -487,7 +463,8 @@ def crear_seguimiento(nombres_estados):
 
         html.P(
             "Monitoreo histórico de saldos, créditos "
-            "activos y niveles de mora.",
+            "activos y niveles de mora, y alertas tempranas "
+            "del modelo de la pregunta 2.",
             style={"color": "#64748b"}
         ),
 
@@ -549,6 +526,8 @@ def crear_seguimiento(nombres_estados):
 # ==========================================
 
 def registrar_callbacks_seguimiento(app, nombres_estados):
+
+    registrar_callbacks_alertas(app, nombres_estados)
 
     @app.callback(
         Output("seg-activos", "children"),

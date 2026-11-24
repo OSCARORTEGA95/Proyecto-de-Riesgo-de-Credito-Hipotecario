@@ -16,10 +16,10 @@ ADD ./tablero/requirements.txt /opt/riesgo/tablero/requirements.txt
 RUN pip install --upgrade pip
 RUN pip install -r /opt/riesgo/tablero/requirements.txt "gunicorn>=26.0.0,<27.0.0"
 
-# Copiar el tablero y las tablas que lee (data/tablero, descargadas con DVC)
+# Copiar el tablero y las tablas que lee: originacion y serie_mensual (descargadas con DVC)
+# y alertas_p2 (lista puntuada por la API con src/riesgo_credito/modelos/puntaje_p2.py)
 ADD ./tablero /opt/riesgo/tablero/
-ADD ./data/tablero/originacion /opt/riesgo/data/tablero/originacion/
-ADD ./data/tablero/serie_mensual /opt/riesgo/data/tablero/serie_mensual/
+ADD ./data/tablero /opt/riesgo/data/tablero/
 
 # Hacer ejecutable el script de arranque
 RUN chmod +x /opt/riesgo/tablero/run.sh

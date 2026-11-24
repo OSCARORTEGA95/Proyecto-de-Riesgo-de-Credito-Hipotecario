@@ -1,8 +1,12 @@
 # API de inferencia y tablero de Mortgage Risk Analytics.
 #
 # Antes de construir:
-#   - api/model-pkg/ debe tener el modelo empaquetado (package-src: tox run -e train, python3 -m build)
+#   - api/model-pkg/ debe tener el paquete con los dos modelos (package-src: tox run -e train,
+#     tox run -e p2, python3 -m build)
 #   - data/tablero/originacion y data/tablero/serie_mensual deben estar descargadas con DVC
+#   - data/tablero/alertas_p2 se genera con la API encendida (manual de instalación):
+#       sudo docker compose up -d --build api
+#       python src/riesgo_credito/modelos/puntaje_p2.py
 # Uso:  sudo docker compose up -d --build     ·  registros: sudo docker compose logs -f
 # MLflow corre aparte, en el puerto 8050 de la misma máquina.
 
@@ -26,6 +30,7 @@ services:
     environment:
       - PORT=8060
       - API_P1_URL=http://api:8001/api/v1/predict
+      - API_P2_URL=http://api:8001/api/v1/predict_p2
     ports:
       - "8060:8060"
     depends_on:

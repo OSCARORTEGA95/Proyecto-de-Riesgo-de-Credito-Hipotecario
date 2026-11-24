@@ -3,6 +3,7 @@ include *.md
 include modelo_riesgo/VERSION
 include modelo_riesgo/config.yml
 include modelo_riesgo/trained_models/*.pkl
+include modelo_riesgo/trained_models/*.joblib
 include modelo_riesgo/trained_models/*.json
 include requirements/requirements.txt
 recursive-exclude * __pycache__

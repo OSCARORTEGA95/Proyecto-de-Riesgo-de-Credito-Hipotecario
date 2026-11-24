@@ -1,4 +1,8 @@
-"""Modelo de riesgo de crédito hipotecario, pregunta 1: probabilidad de incumplir en los primeros 12 meses."""
+"""Modelos de riesgo de crédito hipotecario.
+
+Pregunta 1 (predict.py): probabilidad de incumplir en los primeros 12 meses, red neuronal.
+Pregunta 2 (p2.py): probabilidad de que un crédito al día llegue a 90 días de mora en 3 meses, k vecinos.
+"""
 import logging
 from pathlib import Path
 

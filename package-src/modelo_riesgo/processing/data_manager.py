@@ -98,14 +98,24 @@ def load_validacion(trimestres: List[str]) -> pd.DataFrame:
 
 
 def nombre_modelo() -> str:
-    return f"{config.pipeline_save_file}{_version}.pkl"
+    """Archivo de la red de la pregunta 1. Si se subió la versión del paquete sin reentrenar la red
+    (por ejemplo, para agregar la pregunta 2), se usa el último archivo entrenado que exista."""
+    nombre = f"{config.pipeline_save_file}{_version}.pkl"
+    if not (TRAINED_MODEL_DIR / nombre).exists():
+        existentes = sorted(TRAINED_MODEL_DIR.glob(f"{config.pipeline_save_file}*.pkl"))
+        if existentes:
+            return existentes[-1].name
+    return nombre
 
 
 def save_pipeline(*, modelo: dict) -> Path:
-    """Guarda el pipeline con su corrección y metadatos, y borra las versiones anteriores."""
-    ruta = TRAINED_MODEL_DIR / nombre_modelo()
-    for archivo in TRAINED_MODEL_DIR.iterdir():
-        if archivo.name not in ("__init__.py", ruta.name):
+    """Guarda el pipeline con su corrección y metadatos, y borra las versiones anteriores de la red.
+
+    Solo borra archivos de la red de la pregunta 1: el modelo de la pregunta 2 se conserva.
+    """
+    ruta = TRAINED_MODEL_DIR / f"{config.pipeline_save_file}{_version}.pkl"
+    for archivo in TRAINED_MODEL_DIR.glob(f"{config.pipeline_save_file}*.pkl"):
+        if archivo.name != ruta.name:
             archivo.unlink()
     joblib.dump(modelo, ruta, compress=3)
     return ruta
