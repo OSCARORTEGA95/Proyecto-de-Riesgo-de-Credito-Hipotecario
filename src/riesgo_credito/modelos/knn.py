@@ -250,7 +250,8 @@ def copiar_codigo(destino):
     base = destino / "riesgo_credito"
     (base / "modelos").mkdir(parents=True)
     origen = RAIZ / "src" / "riesgo_credito"
-    for archivo in ["__init__.py", "modelos/__init__.py", "modelos/knn_modelo.py", "modelos/red_modelo.py"]:
+    for archivo in ["__init__.py", "modelos/__init__.py", "modelos/knn_modelo.py", "modelos/red_modelo.py",
+                    "modelos/rnn_modelo.py"]:
         shutil.copy(origen / archivo, base / archivo)
     return str(base)
 
