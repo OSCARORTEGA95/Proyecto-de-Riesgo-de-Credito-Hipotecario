@@ -86,11 +86,17 @@ git clone https://github.com/OSCARORTEGA95/Proyecto-de-Riesgo-de-Credito-Hipotec
 cd Proyecto-de-Riesgo-de-Credito-Hipotecario
 python3 -m venv .venv && source .venv/bin/activate
 pip install "dvc[s3]" tox build
-dvc pull data/tablero/originacion data/tablero/serie_mensual data/modelado/p1   # tablas del tablero y de la pregunta 1
-cd package-src && tox run -e train && python3 -m build && cd ..                # empaqueta el modelo
-cp package-src/dist/*.whl api/model-pkg/
-sudo docker compose up -d --build     # API en el puerto 8001 y tablero en el 8060
+dvc pull data/tablero/originacion data/tablero/serie_mensual data/modelado/p1 data/modelado/p2
+cd package-src && tox run -e train && tox run -e p2 && python3 -m build && cd ..   # los dos modelos en un .whl
+rm -f api/model-pkg/*.whl && cp package-src/dist/*.whl api/model-pkg/
+sudo docker compose up -d --build api                  # API en el puerto 8001
+python src/riesgo_credito/modelos/puntaje_p2.py        # alertas de la pregunta 2, puntuadas por la API
+sudo docker compose up -d --build                      # tablero en el puerto 8060
 ```
+
+La API sirve las dos preguntas: `POST /api/v1/predict` (probabilidad de incumplir en los primeros 12
+meses, red neuronal) y `POST /api/v1/predict_p2` (probabilidad de que un crédito al día llegue a 90 días
+de mora en 3 meses, k vecinos). La vista Evaluación del tablero usa la primera y Seguimiento, la segunda.
 
 Si no tienes acceso al almacenamiento remoto, descarga los trimestres desde la página de Freddie
 Mac con tu cuenta, guárdalos en `data/crudos/` y corre la canalización con `dvc repro`.
