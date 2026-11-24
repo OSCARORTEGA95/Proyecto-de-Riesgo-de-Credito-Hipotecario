@@ -27,7 +27,7 @@ variables_categoricas: [purpose, prop_type, state]
 
 # Arquitectura de la red: copiar la mejor ejecución del experimento red-p1
 red:
-  capas: [128, 64, 32, 16]
+  capas: [64, 32]          # versión 5 de red-p1: la mejor en validación
   dropout: 0.3
   epocas_max: 60
   paciencia: 8

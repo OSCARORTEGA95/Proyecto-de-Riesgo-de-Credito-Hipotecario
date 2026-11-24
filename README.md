@@ -56,46 +56,44 @@ El diccionario completo está en [docs/datos](docs/datos).
 ## Estructura del repositorio
 
 ```
-├── data/                     No se versiona en Git; se gestiona con Data Version Control
+├── data/                     Se gestiona con Data Version Control (dvc.yaml, dvc.lock), no con Git
 │   ├── crudos/               Archivos originales de Freddie Mac
-│   └── procesados/           Tablas en Parquet generadas por Spark
-├── docker/                   Archivos de Docker por servicio
-├── docs/
-│   ├── anteproyecto/         Carta de anteproyecto
-│   ├── datos/                Diccionario de datos y reglas de etiquetado
-│   ├── decisiones/           Registro de decisiones del proyecto
-│   ├── manuales/             Manual de usuario y manual de instalación
-│   └── reportes/             Reportes de entrega y de trabajo en equipo
-├── models/                   Modelos entrenados; no se versionan en Git
-├── notebooks/                Exploración de datos
+│   ├── limpios/, desempeno/  Tablas en Parquet generadas por Spark
+│   ├── modelado/p1, p2/      Tablas de las preguntas 1 y 2
+│   └── tablero/              Tablas agregadas que lee el tablero
+├── config/                   Parámetros de cada familia de modelos
 ├── src/riesgo_credito/
-│   ├── procesamiento/        Lectura y limpieza con PySpark
-│   ├── etiquetado/           Variables objetivo de las dos preguntas
-│   ├── caracteristicas/      Variables de entrada y secuencias mensuales
-│   ├── modelos/              Entrenamiento y evaluación de las cuatro versiones
-│   ├── servicio/             Servicio de inferencia
-│   └── tablero/              Tablero de control
+│   ├── procesamiento/        Canalización con PySpark y etiquetas
+│   └── modelos/              k vecinos, logística, naive Bayes, árbol, red densa y red recurrente
+├── modelos/                  Versiones exportadas y resumen de métricas
+├── package-src/              Paquete del modelo desplegado (modelo_riesgo, .whl)
+├── api/                      API de inferencia (FastAPI) y su Dockerfile
+├── tablero/                  Tablero en Dash y su Dockerfile
+├── docker-compose.yml        Levanta la API y el tablero
+├── docs/manuales/            Manual de usuario, manual de instalación y guías de despliegue
+├── notebooks/                Exploración, canalización y modelos
 └── tests/                    Pruebas
 ```
 
 ## Cómo empezar
 
-Requisitos: Python 3.10 o superior, Java 11 o superior para Spark, Docker y Git.
+Requisitos: Docker con el complemento Compose, Git, Python 3.10 o superior y Data Version Control
+con acceso al almacenamiento remoto del equipo (S3). El manual de instalación completo está en
+[docs/manuales](docs/manuales).
 
 ```bash
-git clone <url-del-repositorio>
-cd riesgo-credito-freddie-mac
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-dvc pull                      # requiere acceso al almacenamiento remoto privado del equipo
-docker compose up             # levanta el servicio de inferencia, el tablero y MLflow
+git clone https://github.com/OSCARORTEGA95/Proyecto-de-Riesgo-de-Credito-Hipotecario.git
+cd Proyecto-de-Riesgo-de-Credito-Hipotecario
+python3 -m venv .venv && source .venv/bin/activate
+pip install "dvc[s3]" tox build
+dvc pull data/tablero/originacion data/tablero/serie_mensual data/modelado/p1   # tablas del tablero y de la pregunta 1
+cd package-src && tox run -e train && python3 -m build && cd ..                # empaqueta el modelo
+cp package-src/dist/*.whl api/model-pkg/
+sudo docker compose up -d --build     # API en el puerto 8001 y tablero en el 8060
 ```
 
 Si no tienes acceso al almacenamiento remoto, descarga los trimestres desde la página de Freddie
-Mac con tu cuenta, guárdalos en `data/crudos/` y corre el procesamiento con Spark.
-
-> Los comandos y servicios se irán habilitando a lo largo del curso. El manual de instalación
-> completo estará en [docs/manuales](docs/manuales).
+Mac con tu cuenta, guárdalos en `data/crudos/` y corre la canalización con `dvc repro`.
 
 ## Cómo trabajamos
 
@@ -110,8 +108,8 @@ Mac con tu cuenta, guárdalos en `data/crudos/` y corre el procesamiento con Spa
 | Integrante | Rol |
 |---|---|
 | Oscar David Ortega Villa | Líder: pregunta de negocio, modelos, MLflow y servicio de inferencia |
-| Ana Duque | Analista de datos: exploración, maqueta, tablero y manual de usuario |
-| Juan | Ingeniero de datos: canalización con Spark, Data Version Control, contenedores y despliegue |
+| Ana Isabel Fernández Duque | Analista de datos: exploración, maqueta, tablero y manual de usuario |
+| Juan Sebastián Valdés Fuentes | Ingeniero de datos: canalización con Spark, Data Version Control, contenedores y despliegue |
 
 ## Entregas
 
