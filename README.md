@@ -124,3 +124,5 @@ Mac con tu cuenta, guárdalos en `data/crudos/` y corre la canalización con `dv
 | 1 | Domingo 25 de octubre de 2026 | Problema, pregunta de negocio, datos, repositorios, exploración y maqueta |
 | 2 | Domingo 8 de noviembre de 2026 | Modelos, experimentos en MLflow y tablero |
 | 3 | Martes 24 de noviembre de 2026 | Modelos desplegados, contenedores, manuales y video |
+
+Video de la entrega final: https://youtu.be/30XSaNiUy90
