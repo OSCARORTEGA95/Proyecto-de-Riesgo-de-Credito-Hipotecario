@@ -62,21 +62,32 @@ def ultimo_periodo(d):
     """El último mes de la tabla está en los créditos originados en el último trimestre."""
     trimestres = sorted(p.name.split("=", 1)[1] for p in RUTA_P2.glob("trimestre=*"))
     for t in reversed(trimestres):
-        periodos = leer(d, ["period"], ds.field("trimestre") == t)["period"]
+        log(f"Buscando el último mes en {t}")
+        periodos = leer(dataset(RUTA_P2 / f"trimestre={t}"), ["period"], ds.field("period") > 0)["period"]
         if len(periodos):
             return int(periodos.max())
     raise SystemExit(f"No hay datos en {RUTA_P2}: descarga la tabla con DVC")
 
 
 def creditos_del_mes(periodo, grupos):
-    d = dataset(RUTA_P2)
+    """Lee trimestre por trimestre de originación, para mostrar el avance y usar poca memoria."""
     filtro = ((ds.field("period") == periodo) & (ds.field("dlq_num") == 0)
               & (ds.field("grupo_muestra") >= 100 - grupos))
-    log(f"Leyendo los créditos al día de {periodo} con grupo_muestra >= {100 - grupos}")
-    df = leer(d, ["loan_id", "period", "trimestre", ETIQUETA] + P2_VARS, filtro)
+    columnas = ["loan_id", "period", ETIQUETA] + P2_VARS
+    trimestres = sorted(p.name.split("=", 1)[1] for p in RUTA_P2.glob("trimestre=*"))
+    log(f"Leyendo los créditos al día de {periodo} con grupo_muestra >= {100 - grupos} "
+        f"en {len(trimestres)} trimestres de originación")
+    partes = []
+    for i, t in enumerate(trimestres, 1):
+        parte = leer(dataset(RUTA_P2 / f"trimestre={t}"), columnas, filtro)
+        if len(parte):
+            partes.append(parte.assign(trimestre=t))
+        log(f"  {i}/{len(trimestres)} {t}: {len(parte):,} créditos")
+    df = pd.concat(partes, ignore_index=True) if partes else pd.DataFrame(columns=columnas + ["trimestre"])
     log(f"{len(df):,} créditos; agregando los datos de la solicitud original")
     ids = df["loan_id"].unique().tolist()
     p1 = leer(dataset(RUTA_P1), ["loan_id"] + P1_VARS, ds.field("loan_id").isin(ids))
+    log(f"Solicitudes encontradas: {len(p1):,}")
     return df.merge(p1.drop_duplicates("loan_id"), on="loan_id", how="left")
 
 
